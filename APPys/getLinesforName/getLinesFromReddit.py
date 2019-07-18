@@ -35,5 +35,4 @@ def return_reddit_PULine(name):
         print(str(len(pickuplines))+" pick-up lines for "+ name.title()+ " found on Reddit.")
     else:
         print("No pickup lines for "+ name+ " found on Reddit.")
-        s
     return pickuplines
