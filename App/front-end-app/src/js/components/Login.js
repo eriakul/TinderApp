@@ -1,88 +1,64 @@
-import React from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
+import React, { Component } from "react";
+import "./Login.css";
+import Form from 'react-bootstrap/Form'
+import Button from 'react-bootstrap/Button'
 
+export default class Login extends Component {
+    constructor(props) {
+        super(props);
 
-const useStyles = makeStyles(theme => ({
-    '@global': {
-        body: {
-            backgroundColor: theme.palette.common.white,
-        },
-    },
-    paper: {
-        marginTop: theme.spacing(8),
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-    },
-    avatar: {
-        margin: theme.spacing(1),
-        backgroundColor: theme.palette.secondary.main,
-    },
-    form: {
-        width: '100%', // Fix IE 11 issue.
-        marginTop: theme.spacing(1),
-    },
-    submit: {
-        margin: theme.spacing(3, 0, 2),
-    },
-}));
+        this.state = {
+            email: "",
+            password: ""
+        };
+    }
 
-export default function SignIn() {
-    const classes = useStyles();
+    validateForm() {
+        return this.state.email.length > 0 && this.state.password.length > 0;
+    }
 
-    return (
-        <Container component="main" maxWidth="xs">
-            <CssBaseline />
-            <div className={classes.paper}>
-                <Typography component="h1" variant="h5">
-                    Pun in a Million
-                </Typography>
-                <Avatar className={classes.avatar}>
-                    <LockOutlinedIcon />
-                </Avatar>
-                <form className={classes.form} noValidate>
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="email"
-                        label="Email Address"
-                        name="email"
-                        autoComplete="email"
-                        autoFocus
-                    />
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        name="password"
-                        label="Password"
-                        type="password"
-                        id="password"
-                        autoComplete="current-password"
-                    />
+    handleChange = event => {
+        this.setState({
+            [event.target.id]: event.target.value
+        });
+    }
+
+    handleSubmit = event => {
+        event.preventDefault();
+    }
+
+    render() {
+        return (
+            <div className="Login">
+                <Form onSubmit={this.handleSubmit}>
+                    <Form.Group controlId="email" bsSize="large">
+                        <Form.Label>Email</Form.Label>
+                        <Form.Control
+                            autoFocus
+                            type="email"
+                            value={this.state.email}
+                            onChange={this.handleChange}
+                        />
+                    </Form.Group>
+                    <Form.Group controlId="password" bsSize="large">
+                        <Form.Label>Password</Form.Label>
+                        <Form.Control
+                            value={this.state.password}
+                            onChange={this.handleChange}
+                            type="password"
+                        />
+                    </Form.Group>
                     <Button
+                        block
+                        variant="dark"
+                        bsSize="large"
+                        disabled={!this.validateForm()}
                         type="submit"
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
                     >
-                        Sign In
+                        Login
           </Button>
-                </form>
+                </Form>
             </div>
-        </Container>
-    );
+        );
+    }
 }
