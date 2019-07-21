@@ -1,0 +1,9 @@
+{
+    "python.pythonPath": "env/bin/python",
+    "azureFunctions.deploySubpath": "getLinesforName.zip",
+    "azureFunctions.pythonVenv": "env",
+    "azureFunctions.projectLanguage": "Python",
+    "azureFunctions.projectRuntime": "~2",
+    "debug.internalConsoleOptions": "neverOpen",
+    "azureFunctions.preDeployTask": "func: pack"
+}
