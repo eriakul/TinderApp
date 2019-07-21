@@ -22,8 +22,7 @@ def findNearNames(name):
     return nameList
 
 def returnRedditPUL(name):
-    """Function that takes name and outputs comments from r/pickuplines that have the name in the title
-    and the name in the comment in a list. """
+    """Function that takes name and outputs comments from r/pickuplines under the search term {name} """
     pickuplines = []
     name = name.lower()
     logging.info(reddit)
@@ -53,10 +52,12 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     if name:
         names = findNearNames(name)
-        lines = []
+        lines = set()
         for name in names:
-            lines = lines + returnRedditPUL(name)
-        return func.HttpResponse(str(lines))
+            someLines = returnRedditPUL(name)
+            for line in someLines:
+                lines.add(line)
+        return func.HttpResponse(str(list(lines)))
     else:
         return func.HttpResponse(
              "Please pass a name on the query string or in the request body",
