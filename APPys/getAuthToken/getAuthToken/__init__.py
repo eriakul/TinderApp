@@ -21,12 +21,10 @@ def get_fb_access_token(email, password):
     s = robobrowser.RoboBrowser(user_agent=MOBILE_USER_AGENT, parser="lxml")
     s.open(FB_AUTH)
     f = s.get_form()
-    print(f)
     f["pass"] = password
     f["email"] = email
     s.submit_form(f)
     f = s.get_form()
-    print(f)
     try:
     	s.submit_form(f, submit=f.submit_fields['__CONFIRM__'])
     	return re.search(
@@ -84,7 +82,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         logging.warn(token)
         fb_user_id = get_fb_id(token)
         auth = get_auth_token(token, fb_user_id)
-        if True:
+        if auth:
             return func.HttpResponse(auth)
         else:
             logging.warn("AUTHENTICATION FAILED.")
