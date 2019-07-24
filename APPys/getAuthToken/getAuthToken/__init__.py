@@ -79,7 +79,6 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     if email and password:
         token = get_fb_access_token(email, password)
-        logging.warn(token)
         fb_user_id = get_fb_id(token)
         auth = get_auth_token(token, fb_user_id)
         if auth:
