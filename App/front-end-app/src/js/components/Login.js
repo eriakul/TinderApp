@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./Login.css";
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
+import getAuthToken from '../../api/getAuthToken'
 
 export default class Login extends Component {
     constructor(props) {
@@ -9,7 +10,8 @@ export default class Login extends Component {
 
         this.state = {
             email: "",
-            password: ""
+            password: "",
+            token: null,
         };
     }
 
@@ -23,14 +25,25 @@ export default class Login extends Component {
         });
     }
 
-    handleSubmit = event => {
+    onSubmit = (event) => {
         event.preventDefault();
+        const email = this.state.email;
+        const password = this.state.password;
+        const token = getAuthToken(email, password);
+        console.log(token)
+        this.setState({ token });
     }
 
+
     render() {
+        const { handleLogin } = this.props;
+        const { token } = this.state;
+        if (token) {
+            handleLogin(token)
+        }
         return (
             <div className="Login">
-                <Form onSubmit={this.handleSubmit}>
+                <Form onSubmit={this.onSubmit}>
                     <Form.Group controlId="email" bsSize="large">
                         <Form.Label>Email</Form.Label>
                         <Form.Control
@@ -58,7 +71,7 @@ export default class Login extends Component {
                         Login
           </Button>
                 </Form>
-            </div>
+            </div >
         );
     }
 }

@@ -1,11 +1,12 @@
 import React from 'react';
-import './App.css';
-import Login from './js/components/Login'
+import MainContainer from './js/container/MainContainer'
 
-function App() {
-  return (
-    <Login></Login>
-  )
+class App extends React.Component {
+  render() {
+    return (
+      <MainContainer />
+    );
+  }
 }
 
 export default App;

@@ -4,9 +4,12 @@
   "private": true,
   "dependencies": {
     "bootstrap": "^4.3.1",
+    "fetch": "^1.1.0",
+    "flexbox-react": "^4.4.0",
     "react": "^16.8.6",
     "react-bootstrap": "^1.0.0-beta.9",
     "react-dom": "^16.8.6",
+    "react-flexbox-grid": "^2.1.2",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1",
     "yarn": "^1.17.3"
