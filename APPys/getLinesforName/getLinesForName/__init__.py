@@ -3,6 +3,7 @@ import azure.functions as func
 import praw
 import auth
 from datamuse import datamuse
+import json
 
 reddit = praw.Reddit(client_id= auth.REDDIT_CLIENT_ID,
                      client_secret= auth.REDDIT_CLIENT_SECRET,
@@ -40,6 +41,11 @@ def returnRedditPUL(name):
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
+    headers = {
+            "Access-Control-Allow-Origin" : "http://localhost:3000",
+            "Access-Control-Allow-Credentials" : "true",
+            "Access-Control-Allow-Methods" : "GET, POST, OPTIONS",
+            "Access-Control-Allow-Headers" : "Origin, Content-Type, Accept"}
 
     name = req.params.get('name')
     if not name:
@@ -57,9 +63,10 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             someLines = returnRedditPUL(name)
             for line in someLines:
                 lines.add(line)
-        return func.HttpResponse(str(list(lines)))
+        lineObject = {'lines':list(lines)}
+        data = json.dumps(lineObject)
+        return func.HttpResponse(data, status_code=200, headers=headers)
     else:
-        return func.HttpResponse(
-             "Please pass a name on the query string or in the request body",
-             status_code=400
-        )
+        errorObject = {'error':"Unable to get lines from reddit."}
+        data = json.dumps(errorObject)
+        return func.HttpResponse(data, headers=headers)
