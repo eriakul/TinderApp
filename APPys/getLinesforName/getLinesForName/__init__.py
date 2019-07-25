@@ -47,6 +47,10 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             "Access-Control-Allow-Methods" : "GET, POST, OPTIONS",
             "Access-Control-Allow-Headers" : "Origin, Content-Type, Accept"}
 
+    #handle CORS preflight
+    if req.method == "OPTIONS":
+        return func.HttpResponse(headers=headers)
+
     name = req.params.get('name')
     if not name:
         try:
@@ -57,7 +61,10 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             name = req_body.get('name')
 
     if name:
-        names = findNearNames(name)
+        try:
+            names = findNearNames(name)
+        except:
+            names = [name]
         lines = set()
         for name in names:
             someLines = returnRedditPUL(name)
