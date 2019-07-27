@@ -2,9 +2,15 @@ import React, { Component } from "react";
 import "./Login.css";
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
-import getAuthToken from '../../api/getAuthToken'
+import getAuthToken from '../../api/fetchAuthToken'
 
-export default class Login extends Component {
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
+
+import { getPULForName } from '../../actions/Actions'
+
+class Login extends Component {
     constructor(props) {
         super(props);
 
@@ -14,6 +20,7 @@ export default class Login extends Component {
             token: null,
         };
     }
+
 
     validateForm() {
         return this.state.email.length > 0 && this.state.password.length > 0;
@@ -29,18 +36,17 @@ export default class Login extends Component {
         event.preventDefault();
         const email = this.state.email;
         const password = this.state.password;
-        const token = getAuthToken(email, password);
-        console.log(token)
-        this.setState({ token });
+        this.props.getPULForName("jennifer")
     }
 
 
     render() {
-        const { handleLogin } = this.props;
+        const { handleLogin, matchLines } = this.props;
         const { token } = this.state;
         if (token) {
-            handleLogin(token)
+            console.log(token)
         }
+        console.log(matchLines)
         return (
             <div className="Login">
                 <Form onSubmit={this.onSubmit}>
@@ -75,3 +81,18 @@ export default class Login extends Component {
         );
     }
 }
+
+Login.propTypes = {
+    handleLogin: PropTypes.func.isRequired,
+    matchLines: PropTypes.array.isRequired
+}
+
+
+export default connect(
+    ({ matchLines }) => ({
+        matchLines
+    }),
+    {
+        getPULForName
+    }
+)(Login);
