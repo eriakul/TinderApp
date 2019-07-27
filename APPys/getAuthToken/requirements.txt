@@ -1,3 +1,5 @@
 robobrowser==0.5.3
 lxml==4.3.4
 regex
+praw==6.3.1
+python-datamuse==1.2.1
