@@ -2,22 +2,19 @@ import React, { Component } from "react";
 import "./Login.css";
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
-import getAuthToken from '../../api/fetchAuthToken'
-
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import Logo from '../components/Logo'
+import { Grid, Row, Col } from 'react-flexbox-grid'
+// import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import Spinner from 'react-bootstrap/Spinner'
 
-import { getPULForName } from '../../actions/Actions'
-
-class Login extends Component {
+export default class Login extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
             email: "",
             password: "",
-            token: null,
         };
     }
 
@@ -34,65 +31,100 @@ class Login extends Component {
 
     onSubmit = (event) => {
         event.preventDefault();
+        console.log("logging in..")
         const email = this.state.email;
         const password = this.state.password;
-        this.props.getPULForName("jennifer")
+        this.props.handleLogin(email, password);
+    }
+
+    renderLoginButton(isPending) {
+        if (!isPending) {
+            return (
+                <div>
+                    Login
+                </div>
+            )
+        }
+        else {
+            return (
+                <div>
+                    <Spinner
+                        as="span"
+                        animation="grow"
+                        size="sm"
+                        role="status"
+                        aria-hidden="true"
+                    />
+                    Logging in...
+                </div>
+            )
+        }
     }
 
 
     render() {
-        const { handleLogin, matchLines } = this.props;
-        const { token } = this.state;
-        if (token) {
-            console.log(token)
-        }
-        console.log(matchLines)
-        return (
-            <div className="Login">
-                <Form onSubmit={this.onSubmit}>
-                    <Form.Group controlId="email" bsSize="large">
-                        <Form.Label>Email</Form.Label>
-                        <Form.Control
-                            autoFocus
-                            type="email"
-                            value={this.state.email}
-                            onChange={this.handleChange}
-                        />
-                    </Form.Group>
-                    <Form.Group controlId="password" bsSize="large">
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control
-                            value={this.state.password}
-                            onChange={this.handleChange}
-                            type="password"
-                        />
-                    </Form.Group>
-                    <Button
-                        block
-                        variant="dark"
-                        bsSize="large"
-                        disabled={!this.validateForm()}
-                        type="submit"
-                    >
-                        Login
-          </Button>
-                </Form>
-            </div >
+        const { isPending } = this.props;
+        const { email, password } = this.state;
+
+        return (<Grid fluid>
+            <Col>
+                <Row center="xs" middle="xs" around="xs" >
+                    <Col className='row center-md center-xs' xs={6} md={4} lg={4}>
+                        <Row><Logo /></Row>
+                        <Row>
+                            <div className="Login">
+                                <Form onSubmit={this.onSubmit}>
+                                    <Form.Group controlId="email" >
+                                        <Form.Label>Email</Form.Label>
+                                        <Form.Control
+                                            autoFocus
+                                            type="email"
+                                            value={email}
+                                            onChange={this.handleChange}
+                                        />
+                                    </Form.Group>
+                                    <Form.Group controlId="password" >
+                                        <Form.Label>Password</Form.Label>
+                                        <Form.Control
+                                            autoFocus
+                                            value={password}
+                                            onChange={this.handleChange}
+                                            type="password"
+                                        />
+                                    </Form.Group>
+                                    <Button
+                                        block
+                                        variant="dark"
+                                        bsSize="large"
+                                        disabled={!this.validateForm()}
+                                        type="submit"
+                                    >
+                                        {this.renderLoginButton(isPending)}
+                                    </Button>
+
+                                </Form>
+                            </div >
+                        </Row>
+                    </Col>
+                </Row>
+            </Col>
+        </Grid >
+
         );
     }
 }
 
 Login.propTypes = {
     handleLogin: PropTypes.func.isRequired,
-    matchLines: PropTypes.array.isRequired
+    isPending: PropTypes.bool.isRequired,
 }
 
 
-export default connect(
-    ({ matchLines }) => ({
-        matchLines
-    }),
-    {
-        getPULForName
-    }
-)(Login);
+// export default connect(
+//     () => ({
+
+//     }),
+//     {
+//         getPULForName
+//     }
+// )(Login);

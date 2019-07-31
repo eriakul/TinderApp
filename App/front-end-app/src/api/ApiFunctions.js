@@ -6,3 +6,21 @@ export function fetchLinesForName(name) {
         body: JSON.stringify(data),
     })
 }
+
+export function fetchAuthToken(email, password) {
+    const url = `https://tinderapp.azurewebsites.net/api/getAuthToken`;
+    const data = { "email": email, "password": password };
+    return fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(data),
+    })
+}
+
+export function fetchMatchData(token) {
+    const url = `https://tinderapp.azurewebsites.net/api/getMatchData`;
+    const data = { "token": token };
+    return fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(data),
+    })
+}

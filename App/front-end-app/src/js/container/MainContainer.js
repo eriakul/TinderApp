@@ -1,40 +1,65 @@
 import React from 'react';
 import Login from '../components/Login'
-import Logo from '../components/Logo'
-import { Grid, Row, Col } from 'react-flexbox-grid';
+import AppPage from './AppPage'
+import PropTypes from 'prop-types';
+import { getToken } from '../../actions/Actions'
+import tinderToken from '../../reducers/tinderToken'
+import { connect } from 'react-redux';
+import RequestStatus from '../../static/RequestStatus';
 
 
 
-export default class MainContainer extends React.Component {
+class MainContainer extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { token: null };
+        this.state = { showLoadingPage: true, showAppPage: false, loginError: false };
     }
 
-    handleLogin = (token) => {
-        // this.setState({ token });
-        console.log(token)
+    handleLogin = (email, password) => {
+        console.log("handling login", email, password);
+
+        this.props.getToken(email, password);
+    }
+
+    renderAppPage = ({ tinderToken }) => {
+        if (tinderToken.requestStatus === RequestStatus.SUCCEEDED) {
+            return (<AppPage token={tinderToken.value}></AppPage>)
+        }
+    }
+
+    renderLoginPage = ({ tinderToken, isPending }) => {
+        if (tinderToken.requestStatus === RequestStatus.SUCCEEDED) {
+            return null
+        }
+        return (
+            <Login isPending={isPending} handleLogin={this.handleLogin}></Login>
+        )
     }
 
     render() {
-        const { token } = this.state;
-        console.log(token);
+        const { tinderToken } = this.props;
+        console.log(tinderToken)
+
+        const isPending = tinderToken.requestStatus === RequestStatus.PENDING;
+
         return (
-            <Grid fluid>
-                <Col>
-                    <Row center="xs" middle="xs" around="xs" >
-                        <Col className='row center-md center-xs' xs={6} md={4} lg={4}>
-                            <Row><Logo /></Row>
-                            <Row>
-                                <Login handleLogin={this.handleLogin} />
-                            </Row>
-                        </Col>
-                    </Row>
-                </Col>
-            </Grid >
+            <div>{this.renderLoginPage({ tinderToken, isPending })}
+                {this.renderAppPage({ tinderToken })}</div>
         );
 
     }
 }
 
+MainContainer.propTypes = {
+    tinderToken: PropTypes.object.isRequired,
+}
+
+export default connect(
+    ({ tinderToken }) => ({
+        tinderToken
+    }),
+    {
+        getToken
+    }
+)(MainContainer);
 

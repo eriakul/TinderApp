@@ -1,10 +1,6 @@
 import * as ActionTypes from './actionTypes';
 import * as ApiFunctions from '../api/ApiFunctions'
 
-export function receivePUL(json) {
-    return { type: ActionTypes.RECEIVED_MATCHES, lines: json["lines"] }
-}
-
 export function getPULForName(name) {
     return dispatch => {
         dispatch({ type: ActionTypes.FETCH_MATCH_LINES })
@@ -21,5 +17,50 @@ export function getPULForName(name) {
 
             }
         )
+    }
+}
+
+export function getToken(email, password) {
+    return dispatch => {
+        dispatch({ type: ActionTypes.FETCH_TOKEN })
+        ApiFunctions.fetchAuthToken(email, password).then(response => {
+            return response.json()
+        })
+            .then(
+                json => {
+                    console.log("JSON", json)
+                    try {
+                        if (json["token"]) {
+                            dispatch({ type: ActionTypes.RECEIVED_TOKEN, payload: json["token"] })
+                        }
+                    }
+                    catch {
+                        dispatch({ type: ActionTypes.FAILED_FETCH_TOKEN, payload: json })
+                    }
+
+                }
+            )
+    }
+}
+
+export function getMatchData(token) {
+    return dispatch => {
+        dispatch({ type: ActionTypes.FETCH_MATCH_DATA })
+        ApiFunctions.fetchMatchData(token).then(response => {
+            return response.json()
+        })
+            .then(
+                json => {
+                    try {
+
+                        dispatch({ type: ActionTypes.RECEIVED_MATCH_DATA, payload: json })
+
+                    }
+                    catch {
+                        dispatch({ type: ActionTypes.FAILED_FETCH_MATCH_DATA, payload: json })
+                    }
+
+                }
+            )
     }
 }
