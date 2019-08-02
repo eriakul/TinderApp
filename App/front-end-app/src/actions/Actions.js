@@ -28,7 +28,6 @@ export function getToken(email, password) {
         })
             .then(
                 json => {
-                    console.log("JSON", json)
                     try {
                         if (json["token"]) {
                             dispatch({ type: ActionTypes.RECEIVED_TOKEN, payload: json["token"] })
@@ -58,6 +57,28 @@ export function getMatchData(token) {
                     }
                     catch {
                         dispatch({ type: ActionTypes.FAILED_FETCH_MATCH_DATA, payload: json })
+                    }
+
+                }
+            )
+    }
+}
+
+export function getMatchMessages(token, match_id) {
+    return dispatch => {
+        dispatch({ type: ActionTypes.FETCH_MATCH_MESSAGES })
+        ApiFunctions.fetchMatchMessages(token, match_id).then(response => {
+            return response.json()
+        })
+            .then(
+                json => {
+                    try {
+
+                        dispatch({ type: ActionTypes.RECEIVED_MATCH_MESSAGES, payload: json })
+
+                    }
+                    catch {
+                        dispatch({ type: ActionTypes.FAILED_FETCH_MATCH_MESSAGES, payload: json })
                     }
 
                 }

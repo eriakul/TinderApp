@@ -3,38 +3,24 @@ import ConversationList from '../ConversationList';
 import MessageList from '../MessageList';
 import './Messenger.css';
 
+import AddLinesPanel from '../AddLinesPanel'
+
 import PropTypes from 'prop-types';
 
 export default class Messenger extends Component {
   render() {
-    const { matchData } = this.props;
+    const { matchData, selectMatch, selectedMatch, matchMessages, matchLines, selectLine } = this.props;
     return (
       <div className="messenger">
-        {/* <Toolbar
-          title="Messenger"
-          leftItems={[
-            <ToolbarButton key="cog" icon="ion-ios-cog" />
-          ]}
-          rightItems={[
-            <ToolbarButton key="add" icon="ion-ios-add-circle-outline" />
-          ]}
-        /> */}
-
-        {/* <Toolbar
-          title="Conversation Title"
-          rightItems={[
-            <ToolbarButton key="info" icon="ion-ios-information-circle-outline" />,
-            <ToolbarButton key="video" icon="ion-ios-videocam" />,
-            <ToolbarButton key="phone" icon="ion-ios-call" />
-          ]}
-        /> */}
-
         <div className="scrollable sidebar">
-          <ConversationList matchData={matchData} />
+          <ConversationList matchData={matchData} selectMatch={selectMatch} />
         </div>
 
         <div className="scrollable content">
-          <MessageList />
+          <MessageList matchMessages={matchMessages} selectedMatch={selectedMatch} selectLine={selectLine} />
+        </div>
+        <div className="content">
+          <AddLinesPanel selectedMatch={selectedMatch} matchLines={matchLines} selectLine={selectLine} />
         </div>
       </div>
     );
@@ -43,4 +29,9 @@ export default class Messenger extends Component {
 
 Messenger.propTypes = {
   matchData: PropTypes.array.isRequired,
+  selectMatch: PropTypes.func.isRequired,
+  selectedMatch: PropTypes.object.isRequired,
+  matchMessages: PropTypes.object.isRequired,
+  matchLines: PropTypes.object.isRequired,
+  selectLine: PropTypes.func.isRequired,
 }

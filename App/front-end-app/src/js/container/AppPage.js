@@ -10,7 +10,10 @@ import RequestStatus from '../../static/RequestStatus';
 
 
 import matchData from '../../reducers/matchData'
-import { getMatchData } from '../../actions/Actions'
+import matchLines from '../../reducers/matchLines'
+import matchMessages from '../../reducers/matchMessages'
+
+import { getMatchData, getMatchMessages, getPULForName } from '../../actions/Actions'
 import { connect } from 'react-redux';
 
 
@@ -18,8 +21,11 @@ class AppPage extends React.Component {
     constructor(props) {
         super();
         this.state = {
-            selectedMatch: null
+            selectedMatch: null,
+            selectedLine: null
         };
+        this.selectMatch = this.selectMatch.bind(this);
+        this.selectLine = this.selectLine.bind(this);
     }
 
     componentDidMount() {
@@ -27,14 +33,32 @@ class AppPage extends React.Component {
         this.props.getMatchData(token)
     }
 
+    selectMatch(selectedMatch) {
+        this.setState({ selectedMatch })
+        const token = this.props.token;
+        this.props.getPULForName(selectedMatch.name);
+        this.props.getMatchMessages(token, selectedMatch.match_id);
+    }
+
+    selectLine(lineText) {
+        const name = this.state.selectedMatch.name;
+    }
+
     render() {
-        const { matchData } = this.props;
-        console.log(matchData)
+        const { matchData, matchMessages, matchLines } = this.props;
+        const { selectedMatch } = this.state;
         if (matchData.requestStatus === RequestStatus.UNINITIALIZED || matchData.requestStatus === RequestStatus.PENDING) {
             return null
         }
         return (
-            <Messenger matchData={matchData.value}></Messenger>
+            <Messenger
+                selectMatch={this.selectMatch}
+                matchData={matchData.value}
+                matchMessages={matchMessages}
+                selectedMatch={selectedMatch}
+                matchLines={matchLines}
+                selectLine={this.selectLine}>
+            </Messenger>
 
         );
     }
@@ -44,15 +68,24 @@ class AppPage extends React.Component {
 AppPage.propTypes = {
     matchData: PropTypes.object.isRequired,
     getMatchData: PropTypes.func.isRequired,
-    token: PropTypes.string.isRequired
+    getPULForName: PropTypes.func.isRequired,
+    token: PropTypes.string.isRequired,
+    matchMessages: PropTypes.object.isRequired,
+    matchLines: PropTypes.object.isRequired,
+    getMatchMessages: PropTypes.func.isRequired,
+
 }
 
 export default connect(
-    ({ matchData }) => ({
-        matchData
+    ({ matchData, matchMessages, matchLines }) => ({
+        matchData,
+        matchMessages,
+        matchLines,
     }),
     {
-        getMatchData
+        getMatchData,
+        getMatchMessages,
+        getPULForName
     }
 )(AppPage);
 

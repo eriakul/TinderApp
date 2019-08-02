@@ -12,9 +12,11 @@ export default class Login extends Component {
     constructor(props) {
         super(props);
 
+        const passywordy = localStorage.getItem("passywordy")
+
         this.state = {
             email: "",
-            password: "",
+            password: passywordy,
         };
     }
 
@@ -31,7 +33,6 @@ export default class Login extends Component {
 
     onSubmit = (event) => {
         event.preventDefault();
-        console.log("logging in..")
         const email = this.state.email;
         const password = this.state.password;
         this.props.handleLogin(email, password);

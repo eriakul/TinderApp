@@ -24,3 +24,12 @@ export function fetchMatchData(token) {
         body: JSON.stringify(data),
     })
 }
+
+export function fetchMatchMessages(token, match_id) {
+    const url = `https://tinderapp.azurewebsites.net/api/getMatchMessages`;
+    const data = { "token": token, "match_id": match_id };
+    return fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(data),
+    })
+}

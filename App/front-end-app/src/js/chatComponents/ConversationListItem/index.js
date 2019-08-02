@@ -3,20 +3,24 @@ import PropTypes from 'prop-types';
 import './ConversationListItem.css';
 
 export default class ConversationListItem extends Component {
-  componentDidMount() {
-    // shave('.conversation-snippet', 20);
-    console.log("Mounted")
+
+  shortenMessage(message) {
+    if (message.length > 30) {
+      return `${message.slice(0, 27)}...`
+    }
+    return message
   }
 
   render() {
-    const { photo, name } = this.props.data;
+    const { photo, name, message } = this.props.data;
+    const { selectMatch } = this.props;
 
     return (
-      <div className="conversation-list-item">
-        <img className="conversation-photo" src={photo} alt="conversation" />
+      <div className="conversation-list-item" onClick={() => selectMatch(this.props.data)}>
+        <img className="conversation-photo" src={photo} alt="" />
         <div className="conversation-info">
           <h1 className="conversation-title">{name}</h1>
-          {/* <p className="conversation-snippet">{ text }</p> */}
+          <p className="conversation-snippet">{this.shortenMessage(message)}</p>
         </div>
       </div>
     );
@@ -24,6 +28,6 @@ export default class ConversationListItem extends Component {
 }
 
 ConversationListItem.propTypes = {
-  name: PropTypes.string.isRequired,
-  data: PropTypes.object.isRequired
+  data: PropTypes.object.isRequired,
+  selectMatch: PropTypes.func.isRequired
 }

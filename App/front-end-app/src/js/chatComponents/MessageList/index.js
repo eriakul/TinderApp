@@ -4,10 +4,8 @@ import Toolbar from '../Toolbar';
 import ToolbarButton from '../ToolbarButton';
 import Message from '../Message';
 // import moment from 'moment';
-
+import PropTypes from 'prop-types';
 import './MessageList.css';
-
-const MY_USER_ID = 'apple';
 
 export default class MessageList extends Component {
   constructor(props) {
@@ -15,10 +13,6 @@ export default class MessageList extends Component {
     this.state = {
       messages: []
     };
-  }
-
-  componentDidMount() {
-    this.getMessages();
   }
 
   getMessages = () => {
@@ -91,7 +85,7 @@ export default class MessageList extends Component {
     });
   }
 
-  renderMessages() {
+  renderMessages({ matchMessages }) {
     // let i = 0;
     // let messageCount = this.state.messages.length;
     // let messages = [];
@@ -146,13 +140,14 @@ export default class MessageList extends Component {
     //   // Proceed to the next message.
     //   i += 1;
     // }
+    console.log("matchMessages", matchMessages)
     const messages = [
       <Message
         key={1}
         isMine={true}
         startsSequence={true}
         endsSequence={true}
-        showTimestamp={true}
+        showTimestamp={false}
         data={{ message: "hjk" }}
       />
     ]
@@ -160,28 +155,29 @@ export default class MessageList extends Component {
   }
 
   render() {
+    const { selectedMatch, matchMessages, selectLine } = this.props;
+    if (!selectedMatch){
+      return <div></div>
+    }
+
+
     return (
       <div className="message-list">
         <Toolbar
-          title="Conversation Title"
-          rightItems={[
-            <ToolbarButton key="info" icon="ion-ios-information-circle-outline" />,
-            <ToolbarButton key="video" icon="ion-ios-videocam" />,
-            <ToolbarButton key="phone" icon="ion-ios-call" />
-          ]}
+          title={selectedMatch["name"]}
         />
 
-        <div className="message-list-container">{this.renderMessages()}</div>
+        <div className="message-list-container">{this.renderMessages({ matchMessages })}</div>
 
-        <Compose rightItems={[
-          <ToolbarButton key="photo" icon="ion-ios-camera" />,
-          <ToolbarButton key="image" icon="ion-ios-image" />,
-          <ToolbarButton key="audio" icon="ion-ios-mic" />,
-          <ToolbarButton key="money" icon="ion-ios-card" />,
-          <ToolbarButton key="games" icon="ion-logo-game-controller-b" />,
-          <ToolbarButton key="emoji" icon="ion-ios-happy" />
+        <Compose />
         ]} />
       </div>
     );
   }
+}
+
+MessageList.propTypes = {
+  selectedMatch: PropTypes.object.isRequired,
+  matchMessages: PropTypes.object.isRequired,
+  selectLine: PropTypes.func.isRequired,
 }

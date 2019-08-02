@@ -16,8 +16,6 @@ class MainContainer extends React.Component {
     }
 
     handleLogin = (email, password) => {
-        console.log("handling login", email, password);
-
         this.props.getToken(email, password);
     }
 
@@ -38,7 +36,6 @@ class MainContainer extends React.Component {
 
     render() {
         const { tinderToken } = this.props;
-        console.log(tinderToken)
 
         const isPending = tinderToken.requestStatus === RequestStatus.PENDING;
 
@@ -56,7 +53,7 @@ MainContainer.propTypes = {
 
 export default connect(
     ({ tinderToken }) => ({
-        tinderToken
+        tinderToken,
     }),
     {
         getToken
