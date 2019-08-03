@@ -34,13 +34,20 @@ def add_line():
     connection = pyodbc.connect('DRIVER='+driver+'; PORT=1433; SERVER='+server+'; DATABASE='+database+';UID='+username+';PWD='+ password)
     cursor = connection.cursor()
 
+
+    cursor.execute("INSERT tinderappdatabase.dbo.Table_1 (name, score, punText)  VALUES ('Peter4', 10, 'Peter4 Peter4 Pussy Eater.')")
+    connection.commit()
+
+
     Query = "SELECT *  from tinderappdatabase.dbo.Table_1"
 
     cursor.execute(Query)
+    
     row = cursor.fetchone()
     tableString = "Table: "
     while row:
         tableString = tableString + "\n" + (str(row[0]) + " " + str(row[1]) + " " + str(row[2]))
         row = cursor.fetchone()
-    
+
+
     return tableString
