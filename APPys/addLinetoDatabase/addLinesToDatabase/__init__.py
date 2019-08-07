@@ -6,7 +6,18 @@ from datamuse import datamuse
 import json 
 import azure.functions as func
 
+#----------------------#
+#---GLOBAL VARIABLES---#
+#----------------------#
+reddit = praw.Reddit(client_id='fAkqHqn2XyBt3g',
+                     client_secret="B1Rv2IY6KfA3PusqSeaFAu8brIw",
+                     user_agent='USERAGENT')
 
+version = praw.__version__
+
+#-----------------------#
+#-------FUNCTIONS-------#
+#-----------------------#
 def tinderAppgetMatchLines(name):
     server = 'tinderappdatabase.database.windows.net'
     database = 'tinderappdatabase'
@@ -18,27 +29,30 @@ def tinderAppgetMatchLines(name):
     cursor = connection.cursor()
     cursor.execute("""SELECT punText 
                     FROM tinderappdatabase.dbo.PunsDB 
-                    WHERE name='{}'""".format(name))
+                    WHERE name=?""", [name])
     
-    #if name does NOT already exist in databse
+    #if name does NOT already exist in databse, get lines from reddit and add them to database
     if not cursor.fetchone():
         lines = getLinesFromReddit(name)
         add_lines(lines, name, cursor, connection)
 
     cursor.execute("""SELECT punText AS 'line'
                     FROM tinderappdatabase.dbo.PunsDB
-                    WHERE name='{}' AND score >= 0
+                    WHERE name=? AND score >= 0
                     ORDER BY score DESC
-                    FOR JSON PATH, ROOT('lines')""".format(name))
+                    FOR JSON PATH, ROOT('lines')""", [name])
     return cursor.fetchone()[0]
-    
-########################################################################################################################
 
-reddit = praw.Reddit(client_id='fAkqHqn2XyBt3g',
-                     client_secret="B1Rv2IY6KfA3PusqSeaFAu8brIw",
-                     user_agent='USERAGENT')
 
-version = praw.__version__
+
+def add_lines(lines, name, cursor, connection):
+    for line in list(lines):
+        #https://github.com/mkleehammer/pyodbc/wiki/Getting-started#parameters
+        cursor.execute("""INSERT tinderappdatabase.dbo.PunsDB (name, score, punText) 
+                        VALUES (?, 10, ?)""", [name, line])
+        connection.commit()
+
+
 
 def findNearNames(name):
     api = datamuse.Datamuse()
@@ -52,6 +66,8 @@ def findNearNames(name):
     if len(nameSet) > 5:
         nameList = nameList[:4]
     return nameList
+
+
 
 def returnRedditPUL(name):
     """Function that takes name and outputs comments from r/pickuplines under the search term {name} """
@@ -69,6 +85,8 @@ def returnRedditPUL(name):
         print("No pickup lines for "+ name+ " found on Reddit.")
     return pickuplines
 
+
+
 def getLinesFromReddit(name):
     try:
         names = findNearNames(name)
@@ -81,24 +99,8 @@ def getLinesFromReddit(name):
             lines.add(line)
     return lines
 
-#####################################################################################################################
 
-def add_lines(lines, name, cursor, connection):
-    #message = "New lines added: "
-
-    for line in list(lines):
-        #print("""INSERT tinderappdatabase.dbo.Table_1 (name, score, punText)
-        #                VALUES ('{}', 10, '{}')""".format(name, line))
-        #message = message+ "\n" + "('{}', 10, '{}')".format(name, line)
-        string = "INSERT tinderappdatabase.dbo.PunsDB (name, score, punText) VALUES ('"+name+"', 10, '"+line+"')"
-        cursor.execute(string)
-        connection.commit()
-        #cursor.execute("""INSERT tinderappdatabase.dbo.PunsDB (name, score, punText) 
-        #                VALUES ('{}', 10, '{}')""".format(name, line))
-        #connection.commit()
-
-    #return message
-
+    
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
