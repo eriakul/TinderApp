@@ -7,28 +7,6 @@ import json
 import azure.functions as func
 
 
-def main(req: func.HttpRequest) -> func.HttpResponse:
-    logging.info('Python HTTP trigger function processed a request.')
-
-    name = req.params.get('name')
-    if not name:
-        try:
-            req_body = req.get_json()
-        except ValueError:
-            pass
-        else:
-            name = req_body.get('name')
-
-    if name:
-        return tinderAppgetMatchLines(name)
-        #return add_line()
-        #return func.HttpResponse(f"Hello {name}!")
-    else:
-        return func.HttpResponse(
-             "Please pass a name on the query string or in the request body",
-             status_code=400
-        )
-
 def tinderAppgetMatchLines(name):
     server = 'tinderappdatabase.database.windows.net'
     database = 'tinderappdatabase'
@@ -41,33 +19,24 @@ def tinderAppgetMatchLines(name):
     cursor.execute("""SELECT punText 
                     FROM tinderappdatabase.dbo.PunsDB 
                     WHERE name='{}'""".format(name))
-
-    #Check database to see if puns for name already exist
-    #if name exists
-        #Retrieve lines from database WHERE score >= 0
-        #Return RESPONSE 
-    #else
-        #Lines = get lines from reddit()
-		#Add lines to database. Initialize each line with score of 10. 
-		#Return RESPONSE
-        
-    if cursor.fetchone():
-        cursor.execute("""SELECT punText AS 'line'
-                        FROM tinderappdatabase.dbo.PunsDB
-                        WHERE name='{}' AND score >= 0
-                        ORDER BY score DESC
-                        FOR JSON PATH, ROOT('lines')""".format(name))
-        return cursor.fetchone()[0]
-    else:
+    
+    #if name does NOT already exist in databse
+    if not cursor.fetchone():
         lines = getLinesFromReddit(name)
-        return add_lines(lines, name, cursor, connection)
-        #return "No match"
+        add_lines(lines, name, cursor, connection)
 
+    cursor.execute("""SELECT punText AS 'line'
+                    FROM tinderappdatabase.dbo.PunsDB
+                    WHERE name='{}' AND score >= 0
+                    ORDER BY score DESC
+                    FOR JSON PATH, ROOT('lines')""".format(name))
+    return cursor.fetchone()[0]
+    
 ########################################################################################################################
 
-reddit = praw.Reddit(client_id= auth.REDDIT_CLIENT_ID,
-                     client_secret= auth.REDDIT_CLIENT_SECRET,
-                     user_agent= auth.REDDIT_USER_AGENT)
+reddit = praw.Reddit(client_id='fAkqHqn2XyBt3g',
+                     client_secret="B1Rv2IY6KfA3PusqSeaFAu8brIw",
+                     user_agent='USERAGENT')
 
 version = praw.__version__
 
@@ -112,36 +81,40 @@ def getLinesFromReddit(name):
             lines.add(line)
     return lines
 
-def add_lines(lines, name, cursor, connection):
-    #server = 'tinderappdatabase.database.windows.net'
-    #database = 'tinderappdatabase'
-    #username = 'timlucian0817'
-    #password = 'Totoro123!'
-    #driver= '{ODBC Driver 17 for SQL Server}'
-    #connection = pyodbc.connect('DRIVER='+driver+'; PORT=1433; SERVER='+server+'; DATABASE='+database+';UID='+username+';PWD='+ password)
-    #cursor = connection.cursor()
+#####################################################################################################################
 
-    message = "New lines added: "
+def add_lines(lines, name, cursor, connection):
+    #message = "New lines added: "
 
     for line in list(lines):
-        print("""INSERT tinderappdatabase.dbo.Table_1 (name, score, punText)
-                        VALUES ('{}', 10, '{}')""".format(name, line))
-        message = message+ "\n" + "('{}', 10, '{}')".format(name, line)
-        #cursor.execute("""INSERT tinderappdatabase.dbo.Table_1 (name, score, punText)
+        #print("""INSERT tinderappdatabase.dbo.Table_1 (name, score, punText)
+        #                VALUES ('{}', 10, '{}')""".format(name, line))
+        #message = message+ "\n" + "('{}', 10, '{}')".format(name, line)
+        string = "INSERT tinderappdatabase.dbo.PunsDB (name, score, punText) VALUES ('"+name+"', 10, '"+line+"')"
+        cursor.execute(string)
+        connection.commit()
+        #cursor.execute("""INSERT tinderappdatabase.dbo.PunsDB (name, score, punText) 
         #                VALUES ('{}', 10, '{}')""".format(name, line))
         #connection.commit()
 
+    #return message
 
-    #Query = "SELECT *  from tinderappdatabase.dbo.PunsDB"
+def main(req: func.HttpRequest) -> func.HttpResponse:
+    logging.info('Python HTTP trigger function processed a request.')
 
-    #cursor.execute(Query)
-    
-    #row = cursor.fetchone()
-    #tableString = "Table: "
-    #while row:
-        #tableString = tableString + "\n" + (str(row[0]) + " " + str(row[1]) + " " + str(row[2]))
-        #row = cursor.fetchone()
+    name = req.params.get('name')
+    if not name:
+        try:
+            req_body = req.get_json()
+        except ValueError:
+            pass
+        else:
+            name = req_body.get('name')
 
-
-    #return tableString
-    return message
+    if name:
+        return tinderAppgetMatchLines(name)
+    else:
+        return func.HttpResponse(
+             "Please pass a name on the query string or in the request body",
+             status_code=400
+        )
