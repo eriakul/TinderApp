@@ -21,7 +21,11 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             score_delta = req.params.get('score_delta')
 
     if name and punText and score_delta:
-        return change_score(name, punText, score_delta)
+        change_score(name, punText, score_delta)
+        return func.HttpResponse(
+             "Successful score update",
+             status_code=200
+        )
     else:
         return func.HttpResponse(
              "Please pass a name on the query string or in the request body",
@@ -51,4 +55,3 @@ def change_score(name, punText, score_delta):
                     WHERE name=? AND punText=?""", [new_score, name, punText])
     connection.commit()
 
-    return "hey"
