@@ -5,9 +5,9 @@ import PropTypes from 'prop-types';
 // import Col from 'react-bootstrap/Col'
 // import MatchSelect from '../components/MatchSelect'
 // import Chat from '../components/Chat'
-import Messenger from '../chatComponents/Messenger'
+import AppContainer from '../components/AppContainer'
 import RequestStatus from '../../static/RequestStatus';
-
+import AddLineModal from '../components/AddLineModal'
 
 import matchData from '../../reducers/matchData'
 import matchLines from '../../reducers/matchLines'
@@ -22,7 +22,8 @@ class AppPage extends React.Component {
         super();
         this.state = {
             selectedMatch: null,
-            selectedLine: null
+            selectedLine: null,
+            showAddLineModal: false,
         };
         this.selectMatch = this.selectMatch.bind(this);
         this.selectLine = this.selectLine.bind(this);
@@ -37,29 +38,48 @@ class AppPage extends React.Component {
         this.setState({ selectedMatch })
         const token = this.props.token;
         this.props.getPULForName(selectedMatch.name);
-        this.props.getMatchMessages(token, selectedMatch.match_id);
+        this.props.getMatchMessages(token, selectedMatch._id);
     }
 
     selectLine(lineText) {
-        const name = this.state.selectedMatch.name;
+        this.setState({ selectedLine: lineText })
     }
+
+    addLineToDB({ line, send }) {
+        const name = this.state.selectedMatch.name;
+
+    }
+
+    renderAddLineModal({ showAddLineModal }) {
+        if (!showAddLineModal) {
+            return null
+        }
+        return <AddLineModal onReject={() => this.setState({ showAddLineModal: false })}></AddLineModal>
+
+    }
+
 
     render() {
         const { matchData, matchMessages, matchLines } = this.props;
-        const { selectedMatch } = this.state;
+        const { selectedMatch, selectedLine, showAddLineModal } = this.state;
         if (matchData.requestStatus === RequestStatus.UNINITIALIZED || matchData.requestStatus === RequestStatus.PENDING) {
             return null
         }
         return (
-            <Messenger
-                selectMatch={this.selectMatch}
-                matchData={matchData.value}
-                matchMessages={matchMessages}
-                selectedMatch={selectedMatch}
-                matchLines={matchLines}
-                selectLine={this.selectLine}>
-            </Messenger>
-
+            <div>
+                {this.renderAddLineModal({ showAddLineModal })}
+                <AppContainer
+                    selectMatch={this.selectMatch}
+                    matchData={matchData.value}
+                    matchMessages={matchMessages}
+                    selectedMatch={selectedMatch}
+                    matchLines={matchLines}
+                    selectLine={this.selectLine}
+                    selectedLine={selectedLine}
+                    addLine={this.addLineToDB}
+                    openAddLineModal={() => this.setState({ showAddLineModal: true })}>
+                </AppContainer>
+            </div>
         );
     }
 }

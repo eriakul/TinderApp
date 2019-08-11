@@ -7,35 +7,33 @@ import { Grid, Row, Col } from 'react-flexbox-grid'
 // import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Spinner from 'react-bootstrap/Spinner'
+import RequestStatus from "../../static/RequestStatus";
 
 export default class Login extends Component {
     constructor(props) {
         super(props);
 
-        const passywordy = localStorage.getItem("passywordy")
-
         this.state = {
-            email: "",
-            password: passywordy,
+            code: "",
         };
     }
 
 
     validateForm() {
-        return this.state.email.length > 0 && this.state.password.length > 0;
+        return this.state.code.length !== 0;
     }
 
     handleChange = event => {
         this.setState({
-            [event.target.id]: event.target.value
+            code: event.target.value
         });
     }
 
     onSubmit = (event) => {
         event.preventDefault();
-        const email = this.state.email;
-        const password = this.state.password;
-        this.props.handleLogin(email, password);
+        const code = this.state.code;
+        const req_code = this.props.smsMessage.value;
+        this.props.handleLogin(code, req_code);
     }
 
     renderLoginButton(isPending) {
@@ -64,8 +62,10 @@ export default class Login extends Component {
 
 
     render() {
-        const { isPending } = this.props;
-        const { email, password } = this.state;
+        const { tinderToken } = this.props;
+        const { code } = this.state;
+
+        const isPending = tinderToken.requestStatus === RequestStatus.PENDING;
 
         return (<Grid fluid>
             <Col>
@@ -73,36 +73,24 @@ export default class Login extends Component {
                     <Col className='row center-md center-xs' xs={6} md={4} lg={4}>
                         <Row><Logo /></Row>
                         <Row>
-                            <div className="Login">
-                                <Form onSubmit={this.onSubmit}>
-                                    <Form.Group controlId="email" >
-                                        <Form.Label>Email</Form.Label>
+                            <div >
+                                <Form controlId="token" onSubmit={this.onSubmit}>
+                                    <Form.Group controlId="code" >
+                                        <Form.Label>Authentication Code</Form.Label>
                                         <Form.Control
                                             autoFocus
-                                            type="email"
-                                            value={email}
+                                            value={code}
                                             onChange={this.handleChange}
-                                        />
-                                    </Form.Group>
-                                    <Form.Group controlId="password" >
-                                        <Form.Label>Password</Form.Label>
-                                        <Form.Control
-                                            autoFocus
-                                            value={password}
-                                            onChange={this.handleChange}
-                                            type="password"
                                         />
                                     </Form.Group>
                                     <Button
                                         block
                                         variant="dark"
-                                        bsSize="large"
                                         disabled={!this.validateForm()}
                                         type="submit"
                                     >
                                         {this.renderLoginButton(isPending)}
                                     </Button>
-
                                 </Form>
                             </div >
                         </Row>
@@ -117,15 +105,7 @@ export default class Login extends Component {
 
 Login.propTypes = {
     handleLogin: PropTypes.func.isRequired,
-    isPending: PropTypes.bool.isRequired,
+    tinderToken: PropTypes.object.isRequired,
+    smsMessage: PropTypes.object.isRequired
 }
 
-
-// export default connect(
-//     () => ({
-
-//     }),
-//     {
-//         getPULForName
-//     }
-// )(Login);

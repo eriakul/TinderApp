@@ -1,9 +1,11 @@
 import React from 'react';
 import Login from '../components/Login'
+import EnterPhoneNumber from '../components/EnterPhoneNumber'
 import AppPage from './AppPage'
 import PropTypes from 'prop-types';
-import { getToken } from '../../actions/Actions'
+import { getToken, sendSmsText } from '../../actions/Actions'
 import tinderToken from '../../reducers/tinderToken'
+import smsMessage from '../../reducers/smsMessage'
 import { connect } from 'react-redux';
 import RequestStatus from '../../static/RequestStatus';
 
@@ -12,11 +14,18 @@ import RequestStatus from '../../static/RequestStatus';
 class MainContainer extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { showLoadingPage: true, showAppPage: false, loginError: false };
+        this.state = { showLoadingPage: true, showAppPage: false, loginError: false, number: "" };
     }
 
-    handleLogin = (email, password) => {
-        this.props.getToken(email, password);
+    handleSendSms = (number) => {
+        this.setState({ number })
+        this.props.sendSmsText(number)
+    }
+
+    handleLogin = (code, req_code) => {
+        const number = this.state.number;
+        console.log("HANDING LOGIN")
+        this.props.getToken({ number, code, req_code });
     }
 
     renderAppPage = ({ tinderToken }) => {
@@ -25,22 +34,34 @@ class MainContainer extends React.Component {
         }
     }
 
-    renderLoginPage = ({ tinderToken, isPending }) => {
-        if (tinderToken.requestStatus === RequestStatus.SUCCEEDED) {
+    renderLoginPage = ({ tinderToken, smsMessage }) => {
+        if (smsMessage.requestStatus === RequestStatus.SUCCEEDED) {
+            if (tinderToken.requestStatus === RequestStatus.SUCCEEDED) {
+                return null
+            }
+            return (
+                <Login smsMessage={smsMessage} tinderToken={tinderToken} handleLogin={this.handleLogin}></Login>
+            )
+
+        }
+    }
+
+    renderSmsPage = ({ smsMessage }) => {
+        if (smsMessage.requestStatus === RequestStatus.SUCCEEDED) {
             return null
         }
         return (
-            <Login isPending={isPending} handleLogin={this.handleLogin}></Login>
+            <EnterPhoneNumber handleSendSms={this.handleSendSms}></EnterPhoneNumber>
         )
     }
 
     render() {
-        const { tinderToken } = this.props;
-
-        const isPending = tinderToken.requestStatus === RequestStatus.PENDING;
+        const { tinderToken, smsMessage } = this.props;
 
         return (
-            <div>{this.renderLoginPage({ tinderToken, isPending })}
+            <div>
+                {this.renderSmsPage({ smsMessage })}
+                {this.renderLoginPage({ tinderToken, smsMessage })}
                 {this.renderAppPage({ tinderToken })}</div>
         );
 
@@ -49,14 +70,17 @@ class MainContainer extends React.Component {
 
 MainContainer.propTypes = {
     tinderToken: PropTypes.object.isRequired,
+    smsMessage: PropTypes.object.isRequired,
 }
 
 export default connect(
-    ({ tinderToken }) => ({
+    ({ tinderToken, smsMessage }) => ({
         tinderToken,
+        smsMessage
     }),
     {
-        getToken
+        sendSmsText,
+        getToken,
     }
 )(MainContainer);
 

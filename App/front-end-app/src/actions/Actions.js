@@ -20,18 +20,37 @@ export function getPULForName(name) {
     }
 }
 
-export function getToken(email, password) {
+export function sendSmsText(number) {
     return dispatch => {
-        dispatch({ type: ActionTypes.FETCH_TOKEN })
-        ApiFunctions.fetchAuthToken(email, password).then(response => {
+        dispatch({ type: ActionTypes.SEND_SMS_MESSAGE })
+        ApiFunctions.sendSmsMessage(number).then(response => {
             return response.json()
         })
             .then(
                 json => {
                     try {
-                        if (json["token"]) {
-                            dispatch({ type: ActionTypes.RECEIVED_TOKEN, payload: json["token"] })
-                        }
+                        dispatch({ type: ActionTypes.SMS_MESSAGE_SENT, payload: json })
+                    }
+                    catch {
+                        dispatch({ type: ActionTypes.SMS_MESSAGE_FAILED })
+                    }
+
+                }
+            )
+    }
+}
+
+export function getToken({ number, code, req_code }) {
+    return dispatch => {
+        dispatch({ type: ActionTypes.FETCH_TOKEN })
+        ApiFunctions.fetchAuthToken(number, code, req_code).then(response => {
+            return response.json()
+        })
+            .then(
+                json => {
+                    try {
+                        dispatch({ type: ActionTypes.RECEIVED_TOKEN, payload: json })
+
                     }
                     catch {
                         dispatch({ type: ActionTypes.FAILED_FETCH_TOKEN, payload: json })

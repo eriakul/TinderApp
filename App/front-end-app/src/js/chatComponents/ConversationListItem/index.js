@@ -5,8 +5,8 @@ import './ConversationListItem.css';
 export default class ConversationListItem extends Component {
 
   shortenMessage(message) {
-    if (message.length > 30) {
-      return `${message.slice(0, 27)}...`
+    if (message.length > 50) {
+      return `${message.slice(0, 47)}...`
     }
     return message
   }

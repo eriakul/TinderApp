@@ -1,16 +1,9 @@
 .message {
   display: flex;
   flex-direction: column;
-}
-
-.message .timestamp {
-  display: flex;
-  justify-content: center;
-  color: #999;
-  font-weight: 600;
-  font-size: 12px;
-  margin: 10px 0px;
-  text-transform: uppercase;
+  -ms-word-break: break-all;
+  word-break: break-all;
+  word-break: break-word;
 }
 
 .message .bubble-container {
@@ -55,7 +48,7 @@
 }
 
 .message.mine .bubble-container .bubble {
-  background: #007aff;
+  background: #FF5864;
   color: white;
   border-top-left-radius: 20px;
   border-bottom-left-radius: 20px;
