@@ -40,7 +40,7 @@ def tinderAppgetMatchLines(name):
                     FROM tinderappdatabase.dbo.PunsDB
                     WHERE name=? AND score >= 0
                     ORDER BY score DESC
-                    FOR JSON PATH, ROOT('lines')""", [name])
+                    FOR JSON PATH""", [name])
     return cursor.fetchone()[0]
 
 
@@ -114,7 +114,19 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             name = req_body.get('name')
 
     if name:
-        return tinderAppgetMatchLines(name)
+        lines = set()
+        jsonObject = tinderAppgetMatchLines(name)
+        for i in json.loads(jsonObject):
+            lines.add(i['line'])
+        
+        lineObject = {'lines':list(lines)}
+        data = json.dumps(lineObject)
+
+        return func.HttpResponse(
+             data,
+             status_code=200
+        )
+        
     else:
         return func.HttpResponse(
              "Please pass a name on the query string or in the request body",
