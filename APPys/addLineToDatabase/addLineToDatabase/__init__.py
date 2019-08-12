@@ -35,13 +35,20 @@ def tinderAppgetMatchLines(name):
     if not cursor.fetchone():
         lines = getLinesFromReddit(name)
         add_lines(lines, name, cursor, connection)
+    else:
+        cursor.execute("""SELECT punText AS 'line'
+                        FROM tinderappdatabase.dbo.PunsDB
+                        WHERE name=? AND score >= 0
+                        ORDER BY score DESC
+                        FOR JSON PATH""", [name])
 
-    cursor.execute("""SELECT punText AS 'line'
-                    FROM tinderappdatabase.dbo.PunsDB
-                    WHERE name=? AND score >= 0
-                    ORDER BY score DESC
-                    FOR JSON PATH""", [name])
-    return cursor.fetchone()[0]
+        lines = set()
+        response = cursor.fetchone()[0]
+        logging.warn(response)
+        for i in json.loads(response):
+            lines.add(i['line'])
+
+    return list(lines)
 
 
 
@@ -114,13 +121,12 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             name = req_body.get('name')
 
     if name:
-        lines = set()
-        jsonObject = tinderAppgetMatchLines(name)
-        for i in json.loads(jsonObject):
-            lines.add(i['line'])
+        lines = tinderAppgetMatchLines(name)
+        #should be getting json 
         
-        lineObject = {'lines':list(lines)}
+        lineObject = {'lines':lines}
         data = json.dumps(lineObject)
+
 
         return func.HttpResponse(
              data,
