@@ -15,13 +15,13 @@ export default class MessageList extends Component {
 
 
   render() {
-    const { selectedMatch, matchMessages, selectedLine } = this.props;
+    const { selectedMatch, matchMessages, selectedLine, sendMessageToTinder, sendMessageStatus } = this.props;
 
 
     return (
       <div className="round-container">
-        <ChatWindow  matchMessages={matchMessages} selectedMatch={selectedMatch} ></ChatWindow>
-        <TextingBar selectedLine={selectedLine}></TextingBar>
+        <ChatWindow sendMessageStatus={sendMessageStatus} matchMessages={matchMessages.value} selectedMatch={selectedMatch} matchMessagesStatus={matchMessages.requestStatus} ></ChatWindow>
+        <TextingBar selectedLine={selectedLine} sendMessageToTinder={sendMessageToTinder}></TextingBar>
       </div>
     );
   }
@@ -31,4 +31,7 @@ MessageList.propTypes = {
   selectedMatch: PropTypes.object.isRequired,
   matchMessages: PropTypes.object.isRequired,
   selectedLine: PropTypes.string.isRequired,
+  sendMessageToTinder: PropTypes.func.isRequired,
+  sendMessageStatus:PropTypes.object.isRequired, 
+
 }

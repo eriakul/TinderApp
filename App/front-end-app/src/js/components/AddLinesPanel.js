@@ -7,7 +7,6 @@ import Button from 'react-bootstrap/Button'
 import '../../TinderApp.css'
 import RequestStatus from '../../static/RequestStatus';
 import Spinner from 'react-bootstrap/Spinner';
-import AddLines from './AddLines'
 
 export default class AddLinesPanel extends Component {
     // constructor(props) {
@@ -24,9 +23,9 @@ export default class AddLinesPanel extends Component {
     }
 
     renderNoMatchLines({ matchLines }) {
-        if (matchLines.length === 0) {
+        if (matchLines.requestStatus === RequestStatus.SUCCEEDED && matchLines.value.length === 0) {
             return (
-                <div className="centered">There are no lines for this name yet!</div>
+                <div className="centered side-cushion">There are no lines for this name yet!</div>
             )
         }
     }
@@ -40,7 +39,7 @@ export default class AddLinesPanel extends Component {
     }
 
     render() {
-        const { selectedMatch, matchLines, selectLine, addLine, openAddLineModal } = this.props;
+        const { selectedMatch, matchLines, selectLine, openAddLineModal } = this.props;
 
         if (!selectedMatch) {
             return (
@@ -58,13 +57,14 @@ export default class AddLinesPanel extends Component {
                 <div className="bio">{selectedMatch.bio}</div>
                 {this.renderLoading({ matchLines })}
                 {this.renderNoMatchLines({ matchLines })}
-                <div className="line-list-container">
-                    {this.renderMatchLines({ matchLines, selectLine })}
-                </div>
-                <div>{`Don't see a good line for ${selectedMatch.name}?`}</div>
-                <Button variant="secondary" size="lg" block onClick={() => openAddLineModal}>
-                    Add Your Own Line
+                {this.renderMatchLines({ matchLines, selectLine })}
+
+                <div className="side-cushion">{`Don't see a good line for ${selectedMatch.name}?`}</div>
+                <div className="side-cushion" style={{ marginBottom: "30px" }}>
+                    <Button variant="secondary" size="lg" block onClick={openAddLineModal}>
+                        Add Your Own Line
                 </Button>
+                </div>
 
             </div>
         );
@@ -75,7 +75,6 @@ AddLinesPanel.propTypes = {
     selectedMatch: PropTypes.object.isRequired,
     matchLines: PropTypes.object.isRequired,
     selectLine: PropTypes.func.isRequired,
-    addLine: PropTypes.func.isRequired,
     openAddLineModal: PropTypes.func.isRequired,
 
 }

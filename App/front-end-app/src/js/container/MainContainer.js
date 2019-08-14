@@ -24,7 +24,6 @@ class MainContainer extends React.Component {
 
     handleLogin = (code, req_code) => {
         const number = this.state.number;
-        console.log("HANDING LOGIN")
         this.props.getToken({ number, code, req_code });
     }
 
@@ -50,8 +49,9 @@ class MainContainer extends React.Component {
         if (smsMessage.requestStatus === RequestStatus.SUCCEEDED) {
             return null
         }
+
         return (
-            <EnterPhoneNumber handleSendSms={this.handleSendSms}></EnterPhoneNumber>
+            <EnterPhoneNumber smsMessage={smsMessage} handleSendSms={this.handleSendSms}></EnterPhoneNumber>
         )
     }
 

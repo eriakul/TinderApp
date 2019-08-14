@@ -9,12 +9,12 @@ import PropTypes from 'prop-types';
 export default class AppContainer extends Component {
 
     render() {
-        const { matchData, selectMatch, selectedMatch, matchMessages, matchLines, selectLine, selectedLine, AddLine, openAddLineModal } = this.props;
+        const { sendMessageStatus, matchData, selectMatch, selectedMatch, matchMessages, matchLines, selectLine, selectedLine, AddLine, openAddLineModal, sendMessageToTinder } = this.props;
 
         return (
             <div className="app-container">
                 <MatchPreviewPanel matchData={matchData} selectMatch={selectMatch} />
-                <MessagePanel selectedMatch={selectedMatch} matchMessages={matchMessages} selectedLine={selectedLine} ></MessagePanel>
+                <MessagePanel sendMessageStatus={sendMessageStatus} selectedMatch={selectedMatch} matchMessages={matchMessages} selectedLine={selectedLine} sendMessageToTinder={sendMessageToTinder} ></MessagePanel>
                 <AddLinesPanel
                     selectedMatch={selectedMatch}
                     matchLines={matchLines}
@@ -37,5 +37,7 @@ AppContainer.propTypes = {
     selectedLine: PropTypes.string.isRequired,
     AddLine: PropTypes.func.isRequired,
     openAddLineModal: PropTypes.func.isRequired,
+    sendMessageToTinder: PropTypes.func.isRequired,
+    sendMessageStatus:PropTypes.object.isRequired,
 
 }

@@ -10,13 +10,13 @@ import Form from 'react-bootstrap/FormControl';
 
 export default class TextingBar extends Component {
     render() {
-        const { selectedLine } = this.props;
+        const { selectedLine, sendMessageToTinder } = this.props;
         return (
             <div className="text-bar-container">
                 <InputGroup>
                     <FormControl disabled={true} placeholder={selectedLine} as="textarea" aria-label="selectedLine" />
                     <InputGroup.Append>
-                        <Button variant="outline-secondary">Send</Button>
+                        <Button variant="outline-secondary" onClick={() => sendMessageToTinder({ message: selectedLine })}>Send</Button>
                     </InputGroup.Append>
                 </InputGroup>
             </div>
@@ -25,4 +25,6 @@ export default class TextingBar extends Component {
 }
 TextingBar.propTypes = {
     selectedLine: PropTypes.func.isRequired,
+    sendMessageToTinder: PropTypes.func.isRequired,
+
 }

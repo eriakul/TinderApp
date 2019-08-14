@@ -13,7 +13,7 @@ import matchData from '../../reducers/matchData'
 import matchLines from '../../reducers/matchLines'
 import matchMessages from '../../reducers/matchMessages'
 
-import { getMatchData, getMatchMessages, getPULForName } from '../../actions/Actions'
+import { getMatchData, getMatchMessages, getPULForName, addLineToDB, sendMessage } from '../../actions/Actions'
 import { connect } from 'react-redux';
 
 
@@ -27,6 +27,9 @@ class AppPage extends React.Component {
         };
         this.selectMatch = this.selectMatch.bind(this);
         this.selectLine = this.selectLine.bind(this);
+        this.addLineToDatabase = this.addLineToDatabase.bind(this);
+        this.sendMessageToTinder = this.sendMessageToTinder.bind(this);
+
     }
 
     componentDidMount() {
@@ -45,8 +48,19 @@ class AppPage extends React.Component {
         this.setState({ selectedLine: lineText })
     }
 
-    addLineToDB({ line, send }) {
+    addLineToDatabase({ line }) {
         const name = this.state.selectedMatch.name;
+        this.props.addLineToDB(name, line)
+
+    }
+
+    sendMessageToTinder({ message }) {
+        const token = this.props.token;
+        const match_id = this.state.selectedMatch._id;
+        this.props.sendMessage(token, match_id, message);
+        const match = this.state.selectedMatch;
+        match["empty"] = !match["empty"]
+        this.setState({ selectedMatch: match })
 
     }
 
@@ -54,13 +68,16 @@ class AppPage extends React.Component {
         if (!showAddLineModal) {
             return null
         }
-        return <AddLineModal onReject={() => this.setState({ showAddLineModal: false })}></AddLineModal>
+        return <AddLineModal
+            addLineToDatabase={this.addLineToDatabase}
+            sendMessageToTinder={this.sendMessageToTinder}
+            onReject={() => this.setState({ showAddLineModal: false })}></AddLineModal>
 
     }
 
 
     render() {
-        const { matchData, matchMessages, matchLines } = this.props;
+        const { matchData, matchMessages, matchLines, addLineStatus, sendMessageStatus } = this.props;
         const { selectedMatch, selectedLine, showAddLineModal } = this.state;
         if (matchData.requestStatus === RequestStatus.UNINITIALIZED || matchData.requestStatus === RequestStatus.PENDING) {
             return null
@@ -69,6 +86,7 @@ class AppPage extends React.Component {
             <div>
                 {this.renderAddLineModal({ showAddLineModal })}
                 <AppContainer
+
                     selectMatch={this.selectMatch}
                     matchData={matchData.value}
                     matchMessages={matchMessages}
@@ -76,8 +94,10 @@ class AppPage extends React.Component {
                     matchLines={matchLines}
                     selectLine={this.selectLine}
                     selectedLine={selectedLine}
-                    addLine={this.addLineToDB}
-                    openAddLineModal={() => this.setState({ showAddLineModal: true })}>
+                    openAddLineModal={() => this.setState({ showAddLineModal: true })}
+                    sendMessageToTinder={this.sendMessageToTinder}
+                    sendMessageStatus={sendMessageStatus}
+                >
                 </AppContainer>
             </div>
         );
@@ -97,12 +117,17 @@ AppPage.propTypes = {
 }
 
 export default connect(
-    ({ matchData, matchMessages, matchLines }) => ({
-        matchData,
-        matchMessages,
-        matchLines,
-    }),
+    ({ matchData, matchMessages, matchLines, addLineStatus,
+        sendMessageStatus }) => ({
+            matchData,
+            matchMessages,
+            matchLines,
+            addLineStatus,
+            sendMessageStatus,
+        }),
     {
+        sendMessage,
+        addLineToDB,
         getMatchData,
         getMatchMessages,
         getPULForName

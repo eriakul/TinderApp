@@ -8,6 +8,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid'
 import PropTypes from 'prop-types';
 import Spinner from 'react-bootstrap/Spinner'
 import InputGroup from 'react-bootstrap/InputGroup'
+import RequestStatus from "../../static/RequestStatus";
 
 
 export default class EnterPhoneNumber extends Component {
@@ -31,9 +32,37 @@ export default class EnterPhoneNumber extends Component {
         this.props.handleSendSms("1" + number);
     }
 
-
+    renderSendButton({ smsMessage }) {
+        if (smsMessage.requestStatus === RequestStatus.PENDING) {
+            return (
+                <Button
+                    disabled
+                    block
+                    variant="dark"
+                    type="submit"
+                >
+                    <Spinner
+                        as="span"
+                        animation="grow"
+                        size="sm"
+                        role="status"
+                        aria-hidden="true"
+                    /> Sending
+                </Button>)
+        }
+        return (
+            <Button
+                block
+                variant="dark"
+                type="submit"
+            >
+                Send Authentication Text
+            </Button>
+        )
+    }
 
     render() {
+        const { smsMessage } = this.props;
         const { number } = this.state;
 
         return (
@@ -58,13 +87,7 @@ export default class EnterPhoneNumber extends Component {
                                                     onChange={this.handleChange}
                                                 /></InputGroup>
                                         </Form.Group>
-                                        <Button
-                                            block
-                                            variant="dark"
-                                            type="submit"
-                                        >
-                                            Send Authentication Text
-                                        </Button>
+                                        {this.renderSendButton({ smsMessage })}
                                     </Form>
                                 </div >
                             </Row>
@@ -79,4 +102,5 @@ export default class EnterPhoneNumber extends Component {
 
 EnterPhoneNumber.propTypes = {
     handleSendSms: PropTypes.func.isRequired,
+    smsMessage: PropTypes.object.isRequired,
 }

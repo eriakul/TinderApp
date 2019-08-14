@@ -24,7 +24,7 @@ export default class AddLineModal extends Component {
     }
 
     render() {
-        const { addLineToDB, onReject } = this.props;
+        const { addLineToDatabase, sendMessageToTinder, onReject } = this.props;
         const { newLine } = this.state;
 
 
@@ -38,19 +38,24 @@ export default class AddLineModal extends Component {
                         onChange={this.handleChange} />
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={onReject}>
+                    <Button variant="secondary" onClick={() => { addLineToDatabase({ line: newLine }); onReject() }}>
                         Add Line
               </Button>
-                    <Button variant="primary" onClick={onReject}>
+                    <Button variant="primary" onClick={() => {
+                        addLineToDatabase({ line: newLine })
+                        sendMessageToTinder({ message: newLine })
+                        onReject()
+                    }}>
                         Add and Send Line
               </Button>
                 </Modal.Footer>
-            </Modal>
+            </Modal >
         );
     }
 }
 
 AddLineModal.propTypes = {
-    addLineToDB: PropTypes.func.isRequired,
     onReject: PropTypes.func.isRequired,
+    addLineToDatabase: PropTypes.func.isRequired,
+    sendMessageToTinder: PropTypes.func.isRequired,
 }

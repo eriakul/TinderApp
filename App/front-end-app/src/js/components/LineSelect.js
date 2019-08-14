@@ -21,6 +21,7 @@ export default class PulList extends Component {
             return null
         }
         return (
+            <div className="line-list-container">
             <ListGroup>
                 {matchLines.map(line => {
                     return <ListGroup.Item action={true} eventKey={line} onClick={() => selectLine(line)}>{line}</ListGroup.Item>
@@ -28,6 +29,7 @@ export default class PulList extends Component {
                 )}
 
             </ListGroup>
+                            </div>
         );
     }
 }

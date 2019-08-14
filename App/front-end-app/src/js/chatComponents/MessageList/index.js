@@ -140,7 +140,6 @@ export default class MessageList extends Component {
     //   // Proceed to the next message.
     //   i += 1;
     // }
-    console.log("matchMessages", matchMessages)
     const messages = [
       <Message
         key={1}
@@ -156,7 +155,7 @@ export default class MessageList extends Component {
 
   render() {
     const { selectedMatch, matchMessages, selectLine } = this.props;
-    if (!selectedMatch){
+    if (!selectedMatch) {
       return <div></div>
     }
 

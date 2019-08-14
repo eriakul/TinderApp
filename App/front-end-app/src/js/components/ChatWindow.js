@@ -7,24 +7,18 @@ import NoSelectedMatch from './imgs/noMatchSelected.jpg'
 import '../../TinderApp.css';
 
 
-export default class MatchPreviewPanel extends Component {
-    // constructor(props) {
-    //   super(props);
-    //   this.state = {
-    //     conversations: []
-    //   };
-    // }
-    renderMessages({ matchMessages, selectedMatch }) {
+export default class ChatWindow extends Component {
+    renderMessages({ matchMessages, selectedMatch, matchMessagesStatus, sendMessageStatus }) {
+
         if (!selectedMatch) {
             return <img className="nomatchimg" src={NoSelectedMatch} alt="" />
         }
-        if (!matchMessages.RequestStatus === RequestStatus.PENDING) {
+        if (matchMessagesStatus === RequestStatus.PENDING || sendMessageStatus.requestStatus === RequestStatus.PENDING) {
             return <Spinner></Spinner>
         }
-        if (!matchMessages.RequestStatus === RequestStatus.SUCCEEDED) {
-            return null
-        }
-        return matchMessages.value.reverse().map(msg => {
+        matchMessages.reverse();
+        return matchMessages.map(msg => {
+
             return (
                 <ChatBubble
                     key={msg.message}
@@ -37,16 +31,19 @@ export default class MatchPreviewPanel extends Component {
     }
 
     render() {
-        const { matchMessages, selectedMatch } = this.props;
-
+        const { matchMessages, selectedMatch, matchMessagesStatus, sendMessageStatus } = this.props;
+        console.log("MATCH MESSAGE STATUS", matchMessagesStatus)
+        console.log("SENDMESSAGESTATUS", sendMessageStatus)
 
         return (
-            <div className="message-list-container scrollable white">{this.renderMessages({ matchMessages, selectedMatch })}</div>
+            <div className="message-list-container scrollable white">{this.renderMessages({ matchMessages, selectedMatch, matchMessagesStatus, sendMessageStatus })}</div>
         );
     }
 }
 
-MatchPreviewPanel.propTypes = {
+ChatWindow.propTypes = {
     matchMessages: PropTypes.array.isRequired,
     selectedMatch: PropTypes.string.isRequired,
+    matchMessagesStatus: PropTypes.string.isRequired,
+    sendMessageStatus: PropTypes.object.isRequired,
 }

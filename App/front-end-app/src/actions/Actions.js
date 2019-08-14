@@ -104,3 +104,49 @@ export function getMatchMessages(token, match_id) {
             )
     }
 }
+
+
+export function addLineToDB(name, punText) {
+    return dispatch => {
+        dispatch({ type: ActionTypes.ADD_LINE })
+        ApiFunctions.addLineToDatabase(name, punText).then(response => {
+            return response.json()
+        })
+            .then(
+                json => {
+                    try {
+
+                        dispatch({ type: ActionTypes.ADD_LINE_SUCCEEDED, payload: json })
+
+                    }
+                    catch {
+                        dispatch({ type: ActionTypes.ADD_LINE_FAILED, payload: json })
+                    }
+
+                }
+            )
+    }
+}
+
+export function sendMessage(token, match_id, message) {
+
+    return dispatch => {
+        dispatch({ type: ActionTypes.SEND_MESSAGE })
+        ApiFunctions.sendTinderMessage(token, match_id, message).then(response => {
+            return response.json()
+        })
+            .then(
+                json => {
+                    try {
+
+                        dispatch({ type: ActionTypes.MESSAGE_SENT, payload: json })
+
+                    }
+                    catch {
+                        dispatch({ type: ActionTypes.MESSAGE_FAILED, payload: json })
+                    }
+
+                }
+            )
+    }
+}

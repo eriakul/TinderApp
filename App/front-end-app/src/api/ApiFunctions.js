@@ -1,6 +1,6 @@
 export function fetchLinesForName(name) {
-    const url = 'https://dbgetlinesforname.azurewebsites.net/api/addLineToDatabase';
-    const data = { "name": name };
+    const url = 'https://tinderappdatabase.azurewebsites.net/api/addLineToDatabase';
+    const data = { "name": name.toLowerCase() };
     return fetch(url, {
         method: 'POST',
         body: JSON.stringify(data),
@@ -37,6 +37,25 @@ export function fetchMatchData(token) {
 export function fetchMatchMessages(token, match_id) {
     const url = `https://tinderapp.azurewebsites.net/api/getMatchMessages`;
     const data = { "token": token, "match_id": match_id };
+    return fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(data),
+    })
+}
+
+export function addLineToDatabase(name, punText) {
+    const url = `https://tinderappdatabase.azurewebsites.net/api/addUserLine`;
+    const data = { "name": name.toLowerCase(), "punText": punText };
+    return fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(data),
+    })
+}
+
+
+export function sendTinderMessage(token, match_id, message) {
+    const url = `https://tinderapp.azurewebsites.net/api/sendMessage`;
+    const data = { "token": token, "match_id": match_id, "message": message };
     return fetch(url, {
         method: 'POST',
         body: JSON.stringify(data),

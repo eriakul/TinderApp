@@ -1,8 +1,7 @@
 .scrollable {
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
-    flex-basis: 550px;
-    flex-grow: 1;
+    flex-basis: 600px;
     margin:30px;
     align-content: center;
     overflow-x: hidden;
@@ -25,23 +24,23 @@
   width:30%;
   flex-shrink: 0;
   height:700px;
+  justify-content: space-around;
+  object-fit: contain;
+
 }
 
 .app-container{
+  margin-top: 30px;
   display: flex;
   justify-content: space-around;
   flex-direction: row;
+  align-items: center;
 
 }
 
-/* .message-list-container {
-  padding: 10px;
-} */
-
-
 .propic{
-  width: 300px;
-  height: 300px;
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
   display: block;
   margin-left: auto;
@@ -53,19 +52,29 @@
   padding: 20px;
   text-align: justify;
   text-justify: inter-word;
+  height: 20%;
+  overflow-y: scroll;
+  margin-right:30px;
+  margin-left:30px;
 }
 
 .line-list-container{
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
-  max-height: 100px;
   margin:30px;
   align-content: center;
   overflow-x: hidden;
+  height:30%;
 }
 
+.message-list-container {
+  height:500px;
+  margin-bottom: 0px !important;
+}
+
+
 .text-bar-container {
-  flex-grow: 1;
+  flex-grow: 1; 
   margin: 30px;
 }
 
@@ -98,4 +107,9 @@
 
 .half{
   width:50%;
+}
+
+.side-cushion{
+margin-left: 30px;
+margin-right: 30px;
 }
