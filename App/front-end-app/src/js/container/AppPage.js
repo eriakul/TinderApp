@@ -13,6 +13,7 @@ import MatchPreviews from '../components/MatchPreviews'
 import SearchBar from '../components/SearchBar'
 import { getMatchData, getPULForName, addLineToDB, sendMessage } from '../../actions/Actions'
 import { connect } from 'react-redux';
+import MatchDisplay from '../components/MatchDisplay'
 
 
 class AppPage extends React.Component {
@@ -92,6 +93,12 @@ class AppPage extends React.Component {
                     <SearchBar searchTerm={searchTerm} onChange={this.handleChange} ></SearchBar>
                 </div>
                 <div className="page-container">
+                    <MatchDisplay
+                        selectedMatch={selectedMatch}
+                        matchLines={matchLines}
+                        selectLine={this.selectLine}
+                        openAddLineModal={this.openAddLineModal}>
+                    </MatchDisplay>
                     <AddLinesSection
                         selectedMatch={selectedMatch}
                         matchLines={matchLines}

@@ -45,18 +45,16 @@ export default class AddLinesSection extends Component {
 
         return (
             <div className="page-container">
-                <div className="name">{selectedMatch.name}</div>
-                <div className="bio">{selectedMatch.bio}</div>
                 {this.renderLoading({ matchLines })}
                 {this.renderNoMatchLines({ matchLines })}
                 {this.renderMatchLines({ matchLines, selectLine })}
-
+                {/* 
                 <div className="side-cushion">{`Don't see a good line for ${selectedMatch.name}?`}</div>
                 <div className="side-cushion" style={{ marginBottom: "30px" }}>
                     <Button variant="secondary" size="lg" block onClick={openAddLineModal}>
                         Add Your Own Line
                 </Button>
-                </div>
+                </div> */}
 
             </div>
         );
