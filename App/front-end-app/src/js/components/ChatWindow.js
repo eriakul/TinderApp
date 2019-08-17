@@ -32,8 +32,6 @@ export default class ChatWindow extends Component {
 
     render() {
         const { matchMessages, selectedMatch, matchMessagesStatus, sendMessageStatus } = this.props;
-        console.log("MATCH MESSAGE STATUS", matchMessagesStatus)
-        console.log("SENDMESSAGESTATUS", sendMessageStatus)
 
         return (
             <div className="message-list-container scrollable white">{this.renderMessages({ matchMessages, selectedMatch, matchMessagesStatus, sendMessageStatus })}</div>

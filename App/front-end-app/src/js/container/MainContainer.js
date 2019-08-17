@@ -4,8 +4,6 @@ import EnterPhoneNumber from '../components/EnterPhoneNumber'
 import AppPage from './AppPage'
 import PropTypes from 'prop-types';
 import { getToken, sendSmsText } from '../../actions/Actions'
-import tinderToken from '../../reducers/tinderToken'
-import smsMessage from '../../reducers/smsMessage'
 import { connect } from 'react-redux';
 import RequestStatus from '../../static/RequestStatus';
 
@@ -62,7 +60,8 @@ class MainContainer extends React.Component {
             <div>
                 {this.renderSmsPage({ smsMessage })}
                 {this.renderLoginPage({ tinderToken, smsMessage })}
-                {this.renderAppPage({ tinderToken })}</div>
+                {this.renderAppPage({ tinderToken })}
+            </div>
         );
 
     }

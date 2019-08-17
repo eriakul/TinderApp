@@ -8,13 +8,8 @@ import '../../TinderApp.css'
 import RequestStatus from '../../static/RequestStatus';
 import Spinner from 'react-bootstrap/Spinner';
 
-export default class AddLinesPanel extends Component {
-    // constructor(props) {
-    //   super(props);
-    //   this.state = {
-    //     conversations: []
-    //   };
-    // }
+export default class AddLinesSection extends Component {
+
     renderLoading({ matchLines }) {
         if (matchLines.requestStatus === RequestStatus.PENDING) {
             return <div style={{ textAlign: "center", color: "#FFF" }}><Spinner animation="border" variant="light"></Spinner>  *vrrr* Generating lines...</div>
@@ -43,16 +38,13 @@ export default class AddLinesPanel extends Component {
 
         if (!selectedMatch) {
             return (
-                <div className="round-container">
+                <div className="page-container">
 
                 </div>)
         }
 
         return (
-            <div className="round-container">
-                <div >
-                    <img className="propic" src={selectedMatch.photo} alt=""></img>
-                </div>
+            <div className="page-container">
                 <div className="name">{selectedMatch.name}</div>
                 <div className="bio">{selectedMatch.bio}</div>
                 {this.renderLoading({ matchLines })}
@@ -71,7 +63,7 @@ export default class AddLinesPanel extends Component {
     }
 }
 
-AddLinesPanel.propTypes = {
+AddLinesSection.propTypes = {
     selectedMatch: PropTypes.object.isRequired,
     matchLines: PropTypes.object.isRequired,
     selectLine: PropTypes.func.isRequired,

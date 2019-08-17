@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import AddLinesPanel from './AddLinesPanel'
+import AddLinesPanel from './AddLinesSection'
 import MatchPreviewPanel from './MatchPreviewPanel'
 import MessagePanel from './MessagePanel'
 

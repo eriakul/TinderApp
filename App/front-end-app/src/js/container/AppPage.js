@@ -5,15 +5,13 @@ import PropTypes from 'prop-types';
 // import Col from 'react-bootstrap/Col'
 // import MatchSelect from '../components/MatchSelect'
 // import Chat from '../components/Chat'
-import AppContainer from '../components/AppContainer'
 import RequestStatus from '../../static/RequestStatus';
 import AddLineModal from '../components/AddLineModal'
 
-import matchData from '../../reducers/matchData'
-import matchLines from '../../reducers/matchLines'
-import matchMessages from '../../reducers/matchMessages'
-
-import { getMatchData, getMatchMessages, getPULForName, addLineToDB, sendMessage } from '../../actions/Actions'
+import AddLinesSection from '../components/AddLinesSection'
+import MatchPreviews from '../components/MatchPreviews'
+import SearchBar from '../components/SearchBar'
+import { getMatchData, getPULForName, addLineToDB, sendMessage } from '../../actions/Actions'
 import { connect } from 'react-redux';
 
 
@@ -24,6 +22,7 @@ class AppPage extends React.Component {
             selectedMatch: null,
             selectedLine: null,
             showAddLineModal: false,
+            searchTerm: "",
         };
         this.selectMatch = this.selectMatch.bind(this);
         this.selectLine = this.selectLine.bind(this);
@@ -37,11 +36,15 @@ class AppPage extends React.Component {
         this.props.getMatchData(token)
     }
 
+    handleChange = event => {
+        this.setState({
+            searchTerm: event.target.value
+        });
+    }
+
     selectMatch(selectedMatch) {
         this.setState({ selectedMatch })
-        const token = this.props.token;
         this.props.getPULForName(selectedMatch.name);
-        this.props.getMatchMessages(token, selectedMatch._id);
     }
 
     selectLine(lineText) {
@@ -58,9 +61,6 @@ class AppPage extends React.Component {
         const token = this.props.token;
         const match_id = this.state.selectedMatch._id;
         this.props.sendMessage(token, match_id, message);
-        const match = this.state.selectedMatch;
-        match["empty"] = !match["empty"]
-        this.setState({ selectedMatch: match })
 
     }
 
@@ -77,28 +77,28 @@ class AppPage extends React.Component {
 
 
     render() {
-        const { matchData, matchMessages, matchLines, addLineStatus, sendMessageStatus } = this.props;
-        const { selectedMatch, selectedLine, showAddLineModal } = this.state;
+        const { matchData, matchLines, addLineStatus, sendMessageStatus } = this.props;
+        const { searchTerm, selectedMatch, selectedLine, showAddLineModal } = this.state;
         if (matchData.requestStatus === RequestStatus.UNINITIALIZED || matchData.requestStatus === RequestStatus.PENDING) {
             return null
         }
         return (
-            <div>
+            <div className="app-container">
                 {this.renderAddLineModal({ showAddLineModal })}
-                <AppContainer
-
-                    selectMatch={this.selectMatch}
-                    matchData={matchData.value}
-                    matchMessages={matchMessages}
-                    selectedMatch={selectedMatch}
-                    matchLines={matchLines}
-                    selectLine={this.selectLine}
-                    selectedLine={selectedLine}
-                    openAddLineModal={() => this.setState({ showAddLineModal: true })}
-                    sendMessageToTinder={this.sendMessageToTinder}
-                    sendMessageStatus={sendMessageStatus}
-                >
-                </AppContainer>
+                <div className="preview-container" id="style-15">
+                    <MatchPreviews searchTerm={searchTerm} matchData={matchData} selectMatch={this.selectMatch} />
+                </div>
+                <div className="search-bar-container">
+                    <SearchBar searchTerm={searchTerm} onChange={this.handleChange} ></SearchBar>
+                </div>
+                <div className="page-container">
+                    <AddLinesSection
+                        selectedMatch={selectedMatch}
+                        matchLines={matchLines}
+                        selectLine={this.selectLine}
+                        openAddLineModal={this.openAddLineModal}>
+                    </AddLinesSection>
+                </div>
             </div>
         );
     }
@@ -112,15 +112,13 @@ AppPage.propTypes = {
     token: PropTypes.string.isRequired,
     matchMessages: PropTypes.object.isRequired,
     matchLines: PropTypes.object.isRequired,
-    getMatchMessages: PropTypes.func.isRequired,
 
 }
 
 export default connect(
-    ({ matchData, matchMessages, matchLines, addLineStatus,
+    ({ matchData, matchLines, addLineStatus,
         sendMessageStatus }) => ({
             matchData,
-            matchMessages,
             matchLines,
             addLineStatus,
             sendMessageStatus,
@@ -129,7 +127,6 @@ export default connect(
         sendMessage,
         addLineToDB,
         getMatchData,
-        getMatchMessages,
         getPULForName
     }
 )(AppPage);
