@@ -1,0 +1,234 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
+
+* {
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+.app-container{
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: row;
+  /* align-items: center; */
+  height: 100%;
+}
+
+.side-panel-container{
+  display:flex;
+  width:20%;
+  flex-basis: 300px;
+  overflow:hidden;
+  flex-direction: column;
+  /* flex-wrap: nowrap; */
+  /* align-items:center; */
+  background-color: rgb(240, 240, 240);
+  color: rgb(0, 0, 0);
+  height: 100vh;
+
+}
+
+.side-panel-container:hover{
+  background-color: rgb(219, 219, 219);
+}
+
+.preview-container{
+  display:flex;
+  flex-shrink:1;
+  overflow: hidden;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  /* text-align:center; */
+  width: 100%;
+}
+
+.preview-container:hover{
+  overflow-y: scroll;
+}
+
+.search-toggle-button{
+  background-color: Transparent;
+  border: none;
+  outline: none;
+}
+
+.search-bar-container{ 
+  display:flex;
+  flex-shrink: 1; 
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 10px;
+}
+.search-bar{
+  justify-content: flex-start;
+  width: 100%;
+  margin: 10px;
+}
+
+.preview-photo{
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;  
+    margin-right: 15px;
+}
+
+.preview-photo-wrapper{
+  align-items: center;
+  padding: 10px;
+  flex-shrink: 1;
+  margin:10px;
+  display: flex;
+  flex-direction: row;
+
+}
+
+.preview-photo-wrapper:hover{
+background-color: #F5F5F5;
+border-radius: 3px;
+}
+
+.page-container{
+  display:flex;
+  flex-shrink:1;
+  align-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 80%;
+}
+
+.header{
+  background-color: rgb(219, 219, 219);
+  height: 60px;
+  width: 100%;
+  line-height: 60px;
+  text-align: center;
+  font-size: 40px;
+  color: white;
+  letter-spacing: 2px;
+}
+
+.column-container{
+  display:flex;
+  width:50%;
+  flex-direction: column;
+  flex-grow:1;
+  justify-content: flex-start;
+  align-items: center;
+  
+}
+
+.match-display-container{
+  display:flex;
+  flex-direction: row;
+  justify-content: center;
+  margin: 30px;
+  height: 40%;
+  width:80%;
+}
+
+.photo{
+  max-width: 300px;
+  max-height: 300px;
+  height: 100%;
+  object-fit: cover;  
+}
+
+.match-info-container{
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 30px;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  height:100%;
+}
+
+.name{
+  font-size: 1.7em;
+  /* font-weight: bold; */
+}
+
+.bio{
+  text-align: justify;
+  text-justify: inter-word;
+  max-height: 175px;
+  height: 70%;
+  overflow: hidden;
+}
+
+.bio:hover{
+  overflow-y: scroll;
+}
+
+.add-line-container{
+  display: flex;
+  align-content: center;
+  flex-direction: column;
+  margin: 12px 0px 12px 0px;
+  width:100%;
+  height: 40%;
+  justify-content: center;
+  overflow:hidden;
+}
+
+.line-list-container{
+  max-height:330px;
+  flex-shrink: 1;
+  overflow:hidden;
+  overflow-y: scroll;
+}
+.line-list-container:hover{
+  
+}
+
+.send-line-button-container {
+  margin: 12px 0px 12px 0px;
+}
+
+.list-group-item.active{
+  background-color: rgb(238, 238, 238) !important;
+  color: black !important;
+  border: 0px !important;
+
+}
+#send-btn{
+  background-color: #ff5864 !important;
+  border: 0px !important;
+}
+#send-btn:hover{
+  background-color: #f1535e !important;
+}
+
+#add-line-btn{
+  background-color: rgb(238, 238, 238) !important;
+  border: 0px !important;
+  color: black !important;
+}
+
+#add-line-btn:hover{
+  background-color: #dfdfdf !important;
+}
+
+#style-15::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.1);
+	background-color: #F5F5F5;
+	border-radius: 6px;
+}
+
+#style-15::-webkit-scrollbar
+{
+	width: 6px;
+	background-color: #F5F5F5;
+}
+
+#style-15::-webkit-scrollbar-thumb
+{ border-radius: 6px;
+	background-color: #FFF;
+	background-image: -webkit-gradient(linear,
+									   40% 0%,
+									   75% 84%,
+									   from(#fd297b),
+									   to(#ff6558),
+									   color-stop(.6,#ff5864))
+}
