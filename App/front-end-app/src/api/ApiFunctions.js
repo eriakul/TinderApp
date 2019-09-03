@@ -1,5 +1,5 @@
 export function fetchLinesForName(name) {
-    const url = 'https://tinderappdatabase.azurewebsites.net/api/addLineToDatabase';
+    const url = 'https://tinderapp.azurewebsites.net/api/getLinesForName';
     const data = { "name": name.toLowerCase() };
     return fetch(url, {
         method: 'POST',

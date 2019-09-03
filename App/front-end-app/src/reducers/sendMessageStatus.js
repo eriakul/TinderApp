@@ -1,4 +1,4 @@
-import { SEND_MESSAGE, MESSAGE_SENT, MESSAGE_FAILED } from '../actions/actionTypes';
+import { SEND_MESSAGE, MESSAGE_SENT, MESSAGE_FAILED, REFRESH_SEND_MESSAGE } from '../actions/actionTypes';
 import RequestStatus from '../static/RequestStatus'
 
 const initialState = {
@@ -18,6 +18,7 @@ export default function sendMessageStatus(state = initialState, action) {
             return {
                 ...state,
                 value: action.payload,
+                message: action.message, 
                 requestStatus: RequestStatus.SUCCEEDED
             };
         case MESSAGE_FAILED:
@@ -26,6 +27,8 @@ export default function sendMessageStatus(state = initialState, action) {
                 value: action.payload,
                 requestStatus: RequestStatus.FAILED
             }
+        case REFRESH_SEND_MESSAGE:
+                return initialState;
         default:
             return state;
     }

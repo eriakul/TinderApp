@@ -114,6 +114,7 @@ export function addLineToDB(name, punText) {
         })
             .then(
                 json => {
+                    console.log(json)
                     try {
 
                         dispatch({ type: ActionTypes.ADD_LINE_SUCCEEDED, payload: json })
@@ -139,7 +140,7 @@ export function sendMessage(token, match_id, message) {
                 json => {
                     try {
 
-                        dispatch({ type: ActionTypes.MESSAGE_SENT, payload: json })
+                        dispatch({ type: ActionTypes.MESSAGE_SENT, payload: json, message: message })
 
                     }
                     catch {
@@ -148,5 +149,11 @@ export function sendMessage(token, match_id, message) {
 
                 }
             )
+    }
+}
+
+export function refreshSendMessage() {
+    return dispatch => {
+        dispatch({ type: ActionTypes.REFRESH_SEND_MESSAGE })
     }
 }

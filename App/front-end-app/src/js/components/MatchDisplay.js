@@ -23,9 +23,9 @@ export default class MatchDisplay extends Component {
         return (
             <div className="match-display-container">
                 <img className="photo" src={selectedMatch.photo} alt="" />
-                <div className="match-info" >
+                <div className="match-info-container" >
                     <div className="name">{selectedMatch.name}</div>
-                    <div className="bio">{selectedMatch.bio}</div>
+                    <div className="bio" id="style-15">{selectedMatch.bio}</div>
                 </div>
             </div>
         );
@@ -33,7 +33,7 @@ export default class MatchDisplay extends Component {
 }
 
 MatchDisplay.propTypes = {
-    selectedMatch: PropTypes.object.isRequired,
+    selectedMatch: PropTypes.object,
     matchLines: PropTypes.object.isRequired,
     selectLine: PropTypes.func.isRequired,
     openAddLineModal: PropTypes.func.isRequired,

@@ -15,51 +15,54 @@ class MainContainer extends React.Component {
         this.state = { showLoadingPage: true, showAppPage: false, loginError: false, number: "" };
     }
 
-    handleSendSms = (number) => {
-        this.setState({ number })
-        this.props.sendSmsText(number)
-    }
+    // handleSendSms = (number) => {
+    //     this.setState({ number })
+    //     this.props.sendSmsText(number)
+    // }
 
-    handleLogin = (code, req_code) => {
-        const number = this.state.number;
-        this.props.getToken({ number, code, req_code });
-    }
+    // handleLogin = (code, req_code) => {
+    //     const number = this.state.number;
+    //     this.props.getToken({ number, code, req_code });
+    // }
 
     renderAppPage = ({ tinderToken }) => {
-        if (tinderToken.requestStatus === RequestStatus.SUCCEEDED) {
-            return (<AppPage token={tinderToken.value}></AppPage>)
-        }
+        // if (tinderToken.requestStatus === RequestStatus.SUCCEEDED) {
+        //     return (<AppPage token={tinderToken.value}></AppPage>)
+        // }
+        const token = "824e12ef-8914-4d59-b5b9-df37a4062d2c"
+        return (<AppPage token={token}></AppPage>)
     }
 
-    renderLoginPage = ({ tinderToken, smsMessage }) => {
-        if (smsMessage.requestStatus === RequestStatus.SUCCEEDED) {
-            if (tinderToken.requestStatus === RequestStatus.SUCCEEDED) {
-                return null
-            }
-            return (
-                <Login smsMessage={smsMessage} tinderToken={tinderToken} handleLogin={this.handleLogin}></Login>
-            )
+    // renderLoginPage = ({ tinderToken, smsMessage }) => {
+    //     if (smsMessage.requestStatus === RequestStatus.SUCCEEDED) {
+    //         if (tinderToken.requestStatus === RequestStatus.SUCCEEDED) {
+    //             return null
+    //         }
+    //         return (
+    //             <Login smsMessage={smsMessage} tinderToken={tinderToken} handleLogin={this.handleLogin}></Login>
+    //         )
 
-        }
-    }
+    //     }
+    // }
 
-    renderSmsPage = ({ smsMessage }) => {
-        if (smsMessage.requestStatus === RequestStatus.SUCCEEDED) {
-            return null
-        }
+    // renderSmsPage = ({ smsMessage }) => {
+    //     if (smsMessage.requestStatus === RequestStatus.SUCCEEDED) {
+    //         return null
+    //     }
 
-        return (
-            <EnterPhoneNumber smsMessage={smsMessage} handleSendSms={this.handleSendSms}></EnterPhoneNumber>
-        )
-    }
+    //     return (
+    //         <EnterPhoneNumber smsMessage={smsMessage} handleSendSms={this.handleSendSms}></EnterPhoneNumber>
+    //     )
+    // }
 
     render() {
-        const { tinderToken, smsMessage } = this.props;
+        // const { tinderToken, smsMessage } = this.props;
+        const tinderToken = "placeholder"
 
         return (
             <div>
-                {this.renderSmsPage({ smsMessage })}
-                {this.renderLoginPage({ tinderToken, smsMessage })}
+                {/* {this.renderSmsPage({ smsMessage })}
+                {this.renderLoginPage({ tinderToken, smsMessage })} */}
                 {this.renderAppPage({ tinderToken })}
             </div>
         );

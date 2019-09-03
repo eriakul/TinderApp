@@ -3,10 +3,6 @@ import PropTypes from 'prop-types';
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import FormControl from 'react-bootstrap/FormControl'
-
-
-
-
 import '../../TinderApp.css'
 
 export default class AddLineModal extends Component {
@@ -24,14 +20,14 @@ export default class AddLineModal extends Component {
     }
 
     render() {
-        const { addLineToDatabase, sendMessageToTinder, onReject } = this.props;
+        const { addLineToDatabase, sendMessageToTinder, onReject, selectedMatch } = this.props;
         const { newLine } = this.state;
 
 
         return (
             <Modal show={true} onHide={onReject}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Add a new pick up line!</Modal.Title>
+                    <Modal.Title>Add a new pick up line for "{selectedMatch.name}"</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <FormControl as="textarea" aria-label="selectedLine" value={newLine}
@@ -41,7 +37,7 @@ export default class AddLineModal extends Component {
                     <Button variant="secondary" onClick={() => { addLineToDatabase({ line: newLine }); onReject() }}>
                         Add Line
               </Button>
-                    <Button variant="primary" onClick={() => {
+                    <Button id="send-btn" variant="primary" onClick={() => {
                         addLineToDatabase({ line: newLine })
                         sendMessageToTinder({ message: newLine })
                         onReject()
@@ -58,4 +54,5 @@ AddLineModal.propTypes = {
     onReject: PropTypes.func.isRequired,
     addLineToDatabase: PropTypes.func.isRequired,
     sendMessageToTinder: PropTypes.func.isRequired,
+    selectedMatch: PropTypes.object,
 }
