@@ -17,41 +17,43 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             pass
         else:
             name = req_body.get('name')
-            punText = req.params.get('punText')
-            score_delta = req.params.get('score_delta')
+            punText = req_body.get('punText')
+            score_delta = req_body.get('score_delta')
 
     if name and punText and score_delta:
         change_score(name, punText, score_delta)
         return func.HttpResponse(
-             "Successful score update",
-             status_code=200
+            "Successful score update",
+            status_code=200
         )
     else:
         return func.HttpResponse(
-             "Please pass a name on the query string or in the request body",
-             status_code=400
+            "Please pass a name on the query string or in the request body",
+            status_code=400
         )
-        
+
 #-----------------------#
 #-------FUNCTIONS-------#
 #-----------------------#
+
+
 def change_score(name, punText, score_delta):
     server = 'tinderappdatabase.database.windows.net'
     database = 'tinderappdatabase'
     username = 'timlucian0817'
     password = 'Totoro123!'
-    driver= '{ODBC Driver 17 for SQL Server}'
-    connection = pyodbc.connect('DRIVER='+driver+'; PORT=1433; SERVER='+server+'; DATABASE='+database+';UID='+username+';PWD='+ password)
+    driver = '{ODBC Driver 17 for SQL Server}'
+    connection = pyodbc.connect('DRIVER='+driver+'; PORT=1433; SERVER=' +
+                                server+'; DATABASE='+database+';UID='+username+';PWD=' + password)
 
     cursor = connection.cursor()
     cursor.execute("""SELECT score 
                     FROM tinderappdatabase.dbo.PunsDB 
                     WHERE name=? AND punText=?""", [name, punText])
-    
+
     new_score = int(cursor.fetchone()[0]) + int(score_delta)
-    
+
     cursor.execute("""UPDATE tinderappdatabase.dbo.PunsDB 
                     SET score=?
                     WHERE name=? AND punText=?""", [new_score, name, punText])
     connection.commit()
-

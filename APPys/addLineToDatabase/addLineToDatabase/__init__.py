@@ -3,7 +3,7 @@ import pyodbc
 import praw
 import auth
 from datamuse import datamuse
-import json 
+import json
 import azure.functions as func
 
 #----------------------#
@@ -18,20 +18,23 @@ version = praw.__version__
 #-----------------------#
 #-------FUNCTIONS-------#
 #-----------------------#
+
+
 def tinderAppgetMatchLines(name):
     server = 'tinderappdatabase.database.windows.net'
     database = 'tinderappdatabase'
     username = 'timlucian0817'
     password = 'Totoro123!'
-    driver= '{ODBC Driver 17 for SQL Server}'
-    connection = pyodbc.connect('DRIVER='+driver+'; PORT=1433; SERVER='+server+'; DATABASE='+database+';UID='+username+';PWD='+ password)
+    driver = '{ODBC Driver 17 for SQL Server}'
+    connection = pyodbc.connect('DRIVER='+driver+'; PORT=1433; SERVER=' +
+                                server+'; DATABASE='+database+';UID='+username+';PWD=' + password)
 
     cursor = connection.cursor()
     cursor.execute("""SELECT punText 
                     FROM tinderappdatabase.dbo.PunsDB 
                     WHERE name=?""", [name])
-    
-    #if name does NOT already exist in databse, get lines from reddit and add them to database
+
+    # if name does NOT already exist in databse, get lines from reddit and add them to database
     if not cursor.fetchone():
         lines = getLinesFromReddit(name)
         add_lines(lines, name, cursor, connection)
@@ -51,19 +54,17 @@ def tinderAppgetMatchLines(name):
     return list(lines)
 
 
-
 def add_lines(lines, name, cursor, connection):
     for line in list(lines):
-        #https://github.com/mkleehammer/pyodbc/wiki/Getting-started#parameters
+        # https://github.com/mkleehammer/pyodbc/wiki/Getting-started#parameters
         cursor.execute("""INSERT tinderappdatabase.dbo.PunsDB (name, score, punText) 
                         VALUES (?, 10, ?)""", [name, line])
         connection.commit()
 
 
-
 def findNearNames(name):
     api = datamuse.Datamuse()
-    listofDictionaries = api.words(sl = name, max = 10)
+    listofDictionaries = api.words(sl=name, max=10)
     nameSet = set()
     for i in listofDictionaries:
         if i['score'] == 100:
@@ -73,7 +74,6 @@ def findNearNames(name):
     if len(nameSet) > 5:
         nameList = nameList[:4]
     return nameList
-
 
 
 def returnRedditPUL(name):
@@ -87,11 +87,11 @@ def returnRedditPUL(name):
             pickuplines.append(topLevelComment.body)
 
     if pickuplines:
-        print(str(len(pickuplines))+" pick-up lines for "+ name.title()+ " found on Reddit.")
+        print(str(len(pickuplines))+" pick-up lines for " +
+              name.title() + " found on Reddit.")
     else:
-        print("No pickup lines for "+ name+ " found on Reddit.")
+        print("No pickup lines for " + name + " found on Reddit.")
     return pickuplines
-
 
 
 def getLinesFromReddit(name):
@@ -107,7 +107,6 @@ def getLinesFromReddit(name):
     return lines
 
 
-    
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
@@ -122,19 +121,18 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     if name:
         lines = tinderAppgetMatchLines(name)
-        #should be getting json 
-        
-        lineObject = {'lines':lines}
+        # should be getting json
+
+        lineObject = {'lines': lines}
         data = json.dumps(lineObject)
 
-
         return func.HttpResponse(
-             data,
-             status_code=200
+            data,
+            status_code=200
         )
-        
+
     else:
         return func.HttpResponse(
-             "Please pass a name on the query string or in the request body",
-             status_code=400
+            "Please pass a name on the query string or in the request body",
+            status_code=400
         )
