@@ -78,7 +78,7 @@ class AppPage extends React.Component {
                 <MatchPreviews matchData={matchData} selectMatch={this.selectMatch} refreshSendMessage={this.props.refreshSendMessage} />
 
                 <div className="page-container">
-                    <div className="header">PunInAMillion</div>
+                    <div className="header"><span style={{color:"#ff5864"}}>Pun</span>InAMillion</div>
                     <div className="column-container">
                         <MatchDisplay
                             selectedMatch={selectedMatch}

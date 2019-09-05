@@ -4,12 +4,84 @@
   font-family: 'Montserrat', sans-serif !important;
 }
 
+.general-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-image: url('./static/images/fishnets-and-hearts.png');
+  background-repeat: repeat;
+  min-height: 100vh;
+}
+
+.general-page-container{
+  display:flex;
+  align-content: center;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 80%;
+  height:100%;
+}
+
+.general-name-input{
+  display:flex;
+  flex-direction: column;
+  height: 350px;
+  align-items:center;
+  align-content: center;
+  justify-content: center;
+}
+
+.card-stack{
+  border-top: 1px solid black;
+  padding-bottom:40px;
+}
+
+.card{
+  display:flex;
+  width: 600px !important;
+  margin-top: 12px;
+}
+
+.button-box{
+  text-align: right;
+}
+
+.reaction-button{
+  color:gray;
+margin-left:10px;
+}
+
+.reaction-button:hover{
+  color:black;
+}
+
+.clicked-reaction-button{
+  color: #FF5864;
+}
+
+#flag{
+  color: #f0f0f0;
+}
+
+#good{
+  color:rgb(130, 214, 130);
+}
+#bad{
+  color: rgb(190, 125, 125);
+}
+#neutral{
+  color:gray;
+}
+
 .app-container{
   display: flex;
   justify-content: flex-start;
   flex-direction: row;
   /* align-items: center; */
   height: 100%;
+  background-image: url('./static/images/fishnets-and-hearts.png');
+  background-repeat: repeat;
 }
 
 .side-panel-container{
@@ -89,7 +161,7 @@ border-radius: 3px;
 
 .page-container{
   display:flex;
-  flex-shrink:1;
+  flex-grow:1;
   align-content: center;
   align-items: center;
   flex-direction: column;
@@ -97,15 +169,33 @@ border-radius: 3px;
 }
 
 .header{
-  background-image: linear-gradient(to right,#FF5864,#FF655B);
-
-  height: 60px;
+  background-image: linear-gradient(to right,rgb(17, 17, 17),rgb(0, 0, 0));
+  opacity: 0.9;
+  height: 80px;
   width: 100%;
-  line-height: 60px;
+  line-height: 80px;
   text-align: center;
   font-size: 40px;
   color: white;
   letter-spacing: 2px;
+}
+.header > a{
+  position: absolute;;
+  font-size: 12px !important;
+  color: white;
+  right: 50px;
+
+}
+
+
+.card-stack{
+  border-top: 1px solid black;
+  padding-top: 20px;
+}
+
+.card{
+  display:flex;
+  width: 600px !important;
 }
 
 .column-container{
@@ -177,9 +267,8 @@ border-radius: 3px;
   flex-shrink: 1;
   overflow:hidden;
   overflow-y: scroll;
-}
-.line-list-container:hover{
-  
+  border-top: 1px solid gray;
+  border-bottom: 1px solid gray;
 }
 
 .send-line-button-container {

@@ -29,7 +29,7 @@ class MainContainer extends React.Component {
         // if (tinderToken.requestStatus === RequestStatus.SUCCEEDED) {
         //     return (<AppPage token={tinderToken.value}></AppPage>)
         // }
-        const token = "824e12ef-8914-4d59-b5b9-df37a4062d2c"
+        const token = "2dbabfd3-760e-4715-8233-9f91756db1df"
         return (<AppPage token={token}></AppPage>)
     }
 
