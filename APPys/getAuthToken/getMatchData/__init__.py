@@ -33,6 +33,13 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         match_list = []
         while True:
             for match in match_dict["data"]["matches"]:
+                if len(match["messages"]) > 0:
+                    message = match["messages"]
+                    if isinstance(message, list):
+                        message = message[0]["message"]
+
+                else:
+                    message = ""
                 try:
                     person = {
                     "name": match["person"]["name"],
@@ -40,17 +47,18 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
                     "id":match["id"],
                     "dead":match["dead"],
                     "bio":match["person"]["bio"],
-                    "photo":match["person"]["photos"][0]["url"]
+                    "photo":match["person"]["photos"][0]["url"],
+                    "message": message
                     }
                     match_list.append(person)
                 except:
                     person = {
                     "name": match["person"]["name"],
                     "_id": match["_id"],
-                    "id":match["id"],
                     "dead":match["dead"],
                     "bio":"",
-                    "photo":match["person"]["photos"][0]["url"]
+                    "photo":match["person"]["photos"][0]["url"],
+                    "message": message
                     }
                     match_list.append(person)
                 else:
