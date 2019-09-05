@@ -81,12 +81,14 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         token = get_fb_access_token(email, password)
         fb_user_id = get_fb_id(token)
         auth = get_auth_token(token, fb_user_id)
+
+        authObject = {'token': auth}
+        data = json.dumps(authObject)
         if auth:
-            return func.HttpResponse(auth)
+            return func.HttpResponse(data, status_code=200)
         else:
             logging.warn("AUTHENTICATION FAILED.")
     else:
-        return func.HttpResponse(
-             "Please pass an email and password on the query string or in the request body",
-             status_code=400
-        )
+        errorObject = {'error':"Unable to get authentication token from Tinder."}
+        data = json.dumps(errorObject)
+        return func.HttpResponse(data)
