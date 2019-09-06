@@ -53,7 +53,7 @@ margin-left:10px;
 }
 
 .reaction-button:hover{
-  color:black;
+  color:black !important;
 }
 
 .clicked-reaction-button{
@@ -74,6 +74,13 @@ margin-left:10px;
   color:gray;
 }
 
+#like.liked{
+  color: #FF5864 ;
+}
+
+#dislike.disliked{
+  color: #FF5864 ;
+}
 .app-container{
   display: flex;
   justify-content: flex-start;
@@ -179,6 +186,7 @@ border-radius: 3px;
   color: white;
   letter-spacing: 2px;
 }
+
 .header > a{
   position: absolute;;
   font-size: 12px !important;
@@ -186,7 +194,6 @@ border-radius: 3px;
   right: 50px;
 
 }
-
 
 .card-stack{
   border-top: 1px solid black;

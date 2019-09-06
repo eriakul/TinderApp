@@ -20,6 +20,22 @@ export default class CardStack extends React.Component {
 
     }
 
+    clickedReaction({ name, line, type }) {
+
+        let lT = JSON.parse(localStorage.getItem("likesTracker"));
+        if (lT === null || typeof lT !== "object") {
+            lT = { name: {} }
+        }
+        else {
+            if (!lT[name]) {
+                lT[name] = {}
+            }
+        }
+        lT[name][line] = type
+        localStorage.setItem("likesTracker", JSON.stringify(lT))
+        this.setState({ selectedLine: line })
+    }
+
     handleChange = event => {
         this.setState({
             name: event.target.value
@@ -46,12 +62,36 @@ export default class CardStack extends React.Component {
         if (lines.requestStatus !== RequestStatus.SUCCEEDED) {
             return null;
         }
-        console.log(lines)
+
+        let likesTracker = JSON.parse(localStorage.getItem("likesTracker"));
+        if (likesTracker === null) {
+            likesTracker = {}
+        }
+        else {
+            if (!likesTracker[name]) {
+                likesTracker = {}
+            }
+            else (likesTracker = likesTracker[name])
+        }
+        console.log(likesTracker)
 
 
         return (
             <div className="card-stack">
                 {lines.value.lines.map((line) => {
+                    let reactionStatus = likesTracker[line];
+                    console.log(reactionStatus)
+                    let buttonClass;
+                    if (reactionStatus === "liked") {
+                        buttonClass = "reaction-button liked"
+                    }
+                    else if (reactionStatus === "disliked") {
+                        buttonClass = "reaction-button disliked"
+                    }
+                    else {
+                        buttonClass = "reaction-button neutral"
+                    }
+
                     return (
                         <Card >
                             <Card.Body>
@@ -61,9 +101,9 @@ export default class CardStack extends React.Component {
                                     </p>
                                     <div className="button-box">
                                         <span id="neutral">+3</span>
-                                        <FontAwesomeIcon className="reaction-button" icon={faThumbsUp} size="lg" />
-                                        <FontAwesomeIcon className="reaction-button" icon={faThumbsDown} size="lg" />
-                                        <FontAwesomeIcon id="flag" className="reaction-button" icon={faFlag} size="lg" />
+                                        <FontAwesomeIcon onClick={() => this.clickedReaction({ line, name, type: "liked" })} id="like" className={buttonClass} icon={faThumbsUp} size="lg" />
+                                        <FontAwesomeIcon onClick={() => this.clickedReaction({ line, name, type: "disliked" })} id="dislike" className={buttonClass} icon={faThumbsDown} size="lg" />
+                                        {/* <FontAwesomeIcon id="flag" className={buttonClass} icon={faFlag} size="lg" /> */}
                                     </div>
                                 </blockquote>
                             </Card.Body>
@@ -76,7 +116,7 @@ export default class CardStack extends React.Component {
 }
 
 CardStack.propTypes = {
-    name: PropTypes.object.isRequired,
+    name: PropTypes.string,
     lines: PropTypes.object.isRequired,
 
 }

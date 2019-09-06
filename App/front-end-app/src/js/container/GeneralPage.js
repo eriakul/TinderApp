@@ -66,7 +66,7 @@ class GeneralPage extends React.Component {
 
                     </div>
 
-                    <CardStack lines={matchLines}></CardStack>
+                    <CardStack name={submittedName} lines={matchLines}></CardStack>
                 </div >
             </div>
 
