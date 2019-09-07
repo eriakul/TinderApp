@@ -9,6 +9,9 @@ import { getMatchData, getPULForName, addLineToDB, sendMessage, refreshSendMessa
 import { connect } from 'react-redux';
 import MatchDisplay from '../components/MatchDisplay'
 import MessageSendingBar from '../components/MessageSendingBar'
+import Header from '../components/Header'
+import Spinner from 'react-bootstrap/Spinner'
+import { faAlignCenter } from '@fortawesome/free-solid-svg-icons';
 
 
 class AppPage extends React.Component {
@@ -26,9 +29,10 @@ class AppPage extends React.Component {
 
     }
 
-    componentDidMount() {
+    componentWillMount() {
         const token = this.props.token;
         this.props.getMatchData(token)
+        this.setState({ selectedMatch: null })
     }
 
     selectMatch(selectedMatch) {
@@ -58,49 +62,78 @@ class AppPage extends React.Component {
             return null
         }
         return <AddLineModal
-        selectedMatch={selectedMatch}
+            selectedMatch={selectedMatch}
             addLineToDatabase={this.addLineToDatabase}
             sendMessageToTinder={this.sendMessageToTinder}
             onReject={() => this.setState({ showAddLineModal: false })}></AddLineModal>
 
     }
 
+    renderMatchPreviews({ isPending, matchData }) {
+        if (isPending) {
+            return null;
+        }
+        return (
+            <MatchPreviews matchData={matchData} selectMatch={this.selectMatch} refreshSendMessage={this.props.refreshSendMessage} />
+        )
+    }
+
+    renderBody({ matchLines, selectedMatch, isPending }) {
+        if (isPending) {
+            return (
+                <div style={{ height: "100vh", justifyContent: "center" }} className="column-container">
+                    <span>
+                        <Spinner
+                            as="span"
+                            animation="grow"
+                            size="sm"
+                            role="status"
+                            aria-hidden="true"
+                        /> Loading...
+                    </span>
+                </div>
+            )
+        }
+
+        return (<div className="column-container">
+            <MatchDisplay
+                selectedMatch={selectedMatch}
+                matchLines={matchLines}
+                selectLine={this.selectLine}
+                openAddLineModal={this.openAddLineModal}>
+            </MatchDisplay>
+            <MessageSendingBar selectedMatch={selectedMatch}></MessageSendingBar>
+            <SelectLineSection
+                selectedMatch={selectedMatch}
+                matchLines={matchLines}
+                sendMessage={this.sendMessageToTinder}
+            />
+            <AddLinesSection
+                selectedMatch={selectedMatch}
+                matchLines={matchLines}
+                selectLine={this.selectLine}
+                openAddLineModal={() => { this.setState({ showAddLineModal: true }) }}>
+            </AddLinesSection>
+        </div>)
+    }
+
 
     render() {
         const { matchData, matchLines } = this.props;
         const { selectedMatch, showAddLineModal } = this.state;
-        if (matchData.requestStatus === RequestStatus.UNINITIALIZED || matchData.requestStatus === RequestStatus.PENDING) {
-            return null
-        }
-        return (
-            <div className="app-container">
-                {this.renderAddLineModal({ showAddLineModal, selectedMatch })}
-                <MatchPreviews matchData={matchData} selectMatch={this.selectMatch} refreshSendMessage={this.props.refreshSendMessage} />
+        const isPending = (matchData.requestStatus === RequestStatus.UNINITIALIZED || matchData.requestStatus === RequestStatus.PENDING);
 
-                <div className="page-container">
-                    <div className="header"><span style={{color:"#ff5864"}}>Pun</span>InAMillion</div>
-                    <div className="column-container">
-                        <MatchDisplay
-                            selectedMatch={selectedMatch}
-                            matchLines={matchLines}
-                            selectLine={this.selectLine}
-                            openAddLineModal={this.openAddLineModal}>
-                        </MatchDisplay>
-                        <MessageSendingBar selectedMatch={selectedMatch}></MessageSendingBar>
-                        <SelectLineSection
-                            selectedMatch={selectedMatch}
-                            matchLines={matchLines}
-                            sendMessage={this.sendMessageToTinder}
-                        />
-                        <AddLinesSection
-                            selectedMatch={selectedMatch}
-                            matchLines={matchLines}
-                            selectLine={this.selectLine}
-                            openAddLineModal={() => { this.setState({ showAddLineModal: true }) }}>
-                        </AddLinesSection>
+        return (
+            <div><Header isGeneral={false}></Header>
+                <div className="app-container">
+                    {this.renderAddLineModal({ showAddLineModal, selectedMatch })}
+                    {this.renderMatchPreviews({ isPending, matchData })}
+
+                    <div className="page-container">
+
+                        {this.renderBody({ matchLines, selectedMatch, isPending })}
                     </div>
-                </div>
-            </div>
+                </div></div>
         );
     }
 }

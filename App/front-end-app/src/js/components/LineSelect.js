@@ -21,7 +21,7 @@ export default class LineSelect extends Component {
         }
         return (
             <div className="send-line-button-container">
-                <Button id = "send-btn" variant="primary" size="lg" block onClick={() => sendMessage({ message: selectedLine })}>
+                <Button id="send-btn" variant="primary" size="lg" block onClick={() => sendMessage({ message: selectedLine })}>
                     Send this Line!
                 </Button >
             </div>
@@ -29,18 +29,18 @@ export default class LineSelect extends Component {
     }
 
     render() {
-        const { sendMessage, matchLines } = this.props;
+        const { sendMessage, matchLines, selectedMatch } = this.props;
         const { showSendLineButton, selectedLine } = this.state;
-        if (!matchLines) {
+        console.log(selectedMatch)
+        if (!matchLines || !selectedMatch) {
             return null
         }
 
-        if (matchLines.length === 0) {
+        if (matchLines.length === 0 && !!selectedMatch) {
             return (
                 <Alert variant="info">
                     There are no lines for this name yet. Add one below!
             </Alert>)
-
         }
         return (
             <div className="add-line-container">
@@ -62,4 +62,5 @@ export default class LineSelect extends Component {
 LineSelect.propTypes = {
     matchLines: PropTypes.array.isRequired,
     sendMessage: PropTypes.func.isRequired,
+    selectedMatch: PropTypes.object.isRequired
 }

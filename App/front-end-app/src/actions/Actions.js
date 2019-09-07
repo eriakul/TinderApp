@@ -55,7 +55,11 @@ export function getToken({ number, code, req_code }) {
                     catch {
                         dispatch({ type: ActionTypes.FAILED_FETCH_TOKEN, payload: json })
                     }
-
+                    let record = {
+                        token: json,
+                        expiration: (Math.round((new Date()).getTime() / 1000)) + 72000
+                    }
+                    localStorage.setItem("tinderToken", JSON.stringify(record))
                 }
             )
     }
@@ -114,7 +118,6 @@ export function addLineToDB(name, punText) {
         })
             .then(
                 json => {
-                    console.log(json)
                     try {
 
                         dispatch({ type: ActionTypes.ADD_LINE_SUCCEEDED, payload: json })

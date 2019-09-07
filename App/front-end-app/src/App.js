@@ -1,5 +1,5 @@
 import React from 'react';
-import MainContainer from './js/container/MainContainer'
+import TinderPage from './js/container/TinderPage'
 import GeneralPage from './js/container/GeneralPage'
 
 import { Switch, Route } from 'react-router-dom'
@@ -9,9 +9,9 @@ class App extends React.Component {
     return (
       <Switch>
         <Route exact path='/' component={GeneralPage} />
-        <Route path='/tinder' component={MainContainer} />
+        <Route path='/name/:name' component={GeneralPage} />
+        <Route path='/tinder' component={TinderPage} />
       </Switch>
-
     );
   }
 }

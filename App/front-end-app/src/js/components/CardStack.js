@@ -73,14 +73,12 @@ export default class CardStack extends React.Component {
             }
             else (likesTracker = likesTracker[name])
         }
-        console.log(likesTracker)
 
 
         return (
             <div className="card-stack">
                 {lines.value.lines.map((line) => {
                     let reactionStatus = likesTracker[line];
-                    console.log(reactionStatus)
                     let buttonClass;
                     if (reactionStatus === "liked") {
                         buttonClass = "reaction-button liked"

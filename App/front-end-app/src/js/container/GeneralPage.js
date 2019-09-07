@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button'
 import CardStack from '../components/CardStack'
 import { connect } from 'react-redux';
 import { getPULForName, addLineToDB } from '../../actions/Actions'
-
+import { Link } from 'react-router-dom'
 import RequestStatus from '../../static/RequestStatus';
 
 class GeneralPage extends React.Component {
@@ -19,11 +19,20 @@ class GeneralPage extends React.Component {
 
     }
 
+    componentWillMount() {
+        let name = this.props.match.params.name;
+        if (name) {
+            this.setState({ submittedName: name, name })
+            this.props.getPULForName(name);
+        }
+    }
+
     onSubmit = (event) => {
         event.preventDefault();
         const name = this.state.name;
         this.setState({ submittedName: name })
         this.props.getPULForName(name);
+        this.props.history.push(`/name/${name}`)
     }
 
     handleChange = event => {
@@ -34,11 +43,11 @@ class GeneralPage extends React.Component {
 
     render() {
         const { matchLines } = this.props;
-        const { name, submittedName} = this.state;
+        const { name, submittedName } = this.state;
 
         return (
             <div className="general-container">
-                <Header></Header>
+                <Header isGeneral={true}></Header>
                 <div className="general-page-container">
                     <div className="general-name-input">
                         <Form controlId="token" onSubmit={this.onSubmit}>

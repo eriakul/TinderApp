@@ -99,7 +99,7 @@ margin-left:10px;
   flex-direction: column;
   /* flex-wrap: nowrap; */
   /* align-items:center; */
-  background-color: rgb(240, 240, 240);
+  background-color: rgb(226, 226, 226);
   color: rgb(0, 0, 0);
   height: 100vh;
 
@@ -153,17 +153,18 @@ margin-left:10px;
 
 .preview-photo-wrapper{
   align-items: center;
-  padding: 10px;
+  padding: 15px;
   flex-shrink: 1;
-  margin:10px;
+  margin:5px 10px;
   display: flex;
   flex-direction: row;
-
+  background-color: rgb(247, 247, 247);
+  border-radius: 3px;
+  box-shadow: 0px 2px 2px grey;
 }
 
 .preview-photo-wrapper:hover{
-background-color: #F5F5F5;
-border-radius: 3px;
+background-color: rgb(255, 255, 255);
 }
 
 .page-container{
@@ -187,13 +188,21 @@ border-radius: 3px;
   letter-spacing: 2px;
 }
 
-.header > a{
-  position: absolute;;
+.header .float-right{
+  position: absolute;
+  right: 50px;
+  align-items: center;
   font-size: 12px !important;
   color: white;
-  right: 50px;
-
 }
+.header .float-right-home{
+  position: absolute;
+  right: 200px;
+  align-items: center;
+  font-size: 12px !important;
+  color: white;
+}
+
 
 .card-stack{
   border-top: 1px solid black;
@@ -270,12 +279,13 @@ border-radius: 3px;
 }
 
 .line-list-container{
-  max-height:330px;
+  height:270px;
   flex-shrink: 1;
   overflow:hidden;
   overflow-y: scroll;
   border-top: 1px solid gray;
   border-bottom: 1px solid gray;
+  background-color:white;
 }
 
 .send-line-button-container {
