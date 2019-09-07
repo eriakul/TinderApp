@@ -11,7 +11,6 @@ import MatchDisplay from '../components/MatchDisplay'
 import MessageSendingBar from '../components/MessageSendingBar'
 import Header from '../components/Header'
 import Spinner from 'react-bootstrap/Spinner'
-import { faAlignCenter } from '@fortawesome/free-solid-svg-icons';
 
 
 class AppPage extends React.Component {
@@ -47,7 +46,7 @@ class AppPage extends React.Component {
     addLineToDatabase({ line }) {
         const name = this.state.selectedMatch.name;
         this.props.addLineToDB(name, line)
-
+        this.props.getPULForName(name)
     }
 
     sendMessageToTinder({ message }) {
@@ -57,12 +56,17 @@ class AppPage extends React.Component {
 
     }
 
+    startOver() {
+        localStorage.removeItem("tinderToken");
+        this.props.history.push(`/tinder`)
+    }
+
     renderAddLineModal({ showAddLineModal, selectedMatch }) {
         if (!showAddLineModal) {
             return null
         }
         return <AddLineModal
-            selectedMatch={selectedMatch}
+            selectedMatch={selectedMatch.name}
             addLineToDatabase={this.addLineToDatabase}
             sendMessageToTinder={this.sendMessageToTinder}
             onReject={() => this.setState({ showAddLineModal: false })}></AddLineModal>
@@ -78,7 +82,16 @@ class AppPage extends React.Component {
         )
     }
 
-    renderBody({ matchLines, selectedMatch, isPending }) {
+    renderBody({ matchLines, selectedMatch, isPending, isFailed }) {
+        if (isFailed) {
+            return (
+                <div style={{ height: "100vh", justifyContent: "center" }} className="column-container">
+                    <span>
+                        Failed to connect to Tinder. <div onClick={this.startOver}>Click here to try again.</div>
+                    </span>
+                </div>
+            )
+        }
         if (isPending) {
             return (
                 <div style={{ height: "100vh", justifyContent: "center" }} className="column-container">
@@ -122,6 +135,7 @@ class AppPage extends React.Component {
         const { matchData, matchLines } = this.props;
         const { selectedMatch, showAddLineModal } = this.state;
         const isPending = (matchData.requestStatus === RequestStatus.UNINITIALIZED || matchData.requestStatus === RequestStatus.PENDING);
+        const isFailed = matchData.requestStatus === RequestStatus.FAILED;
 
         return (
             <div><Header isGeneral={false}></Header>
@@ -131,7 +145,7 @@ class AppPage extends React.Component {
 
                     <div className="page-container">
 
-                        {this.renderBody({ matchLines, selectedMatch, isPending })}
+                        {this.renderBody({ matchLines, selectedMatch, isPending, isFailed })}
                     </div>
                 </div></div>
         );

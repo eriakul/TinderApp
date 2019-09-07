@@ -8,6 +8,8 @@ import { connect } from 'react-redux';
 import { getPULForName, addLineToDB } from '../../actions/Actions'
 import { Link } from 'react-router-dom'
 import RequestStatus from '../../static/RequestStatus';
+import AddLineModalGeneral from '../components/AddLineModalGeneral'
+
 
 class GeneralPage extends React.Component {
     constructor(props) {
@@ -15,7 +17,10 @@ class GeneralPage extends React.Component {
         this.state = {
             name: '',
             submittedName: '',
+            showAddLineModal: false,
         };
+        this.addLineToDatabase = this.addLineToDatabase.bind(this);
+
 
     }
 
@@ -41,14 +46,39 @@ class GeneralPage extends React.Component {
         });
     }
 
+    addLineToDatabase({ line }) {
+        const name = this.state.submittedName;
+        this.props.addLineToDB(name, line)
+        this.props.getPULForName(name)
+
+    }
+
+    renderAddLineMessage({ submittedName }) {
+        if (!submittedName) {
+            return null
+        }
+    }
+
+    renderAddLineModal({ showAddLineModal, submittedName }) {
+        if (!showAddLineModal) {
+            return null
+        }
+        return <AddLineModalGeneral
+            name={submittedName}
+            addLineToDatabase={this.addLineToDatabase}
+            onReject={() => this.setState({ showAddLineModal: false })} />
+    }
+
+
     render() {
         const { matchLines } = this.props;
-        const { name, submittedName } = this.state;
+        const { name, submittedName, showAddLineModal } = this.state;
 
         return (
             <div className="general-container">
                 <Header isGeneral={true}></Header>
                 <div className="general-page-container">
+                    {this.renderAddLineModal({ showAddLineModal, submittedName })}
                     <div className="general-name-input">
                         <Form controlId="token" onSubmit={this.onSubmit}>
                             <Form.Group controlId="code" >
@@ -71,10 +101,8 @@ class GeneralPage extends React.Component {
                                 Get Pick Up Lines For This Name
                         </Button>
                         </Form>
-                        <a href="tinder" style={{ marginTop: "12px", color: "gray" }}>Connect to Tinder and send lines automatically.</a>
-
                     </div>
-
+                    <div className="general-add-lines-message" onClick={() => { this.setState({ showAddLineModal: true }) }}>Add a pick up line for {submittedName}.</div>
                     <CardStack name={submittedName} lines={matchLines}></CardStack>
                 </div >
             </div>

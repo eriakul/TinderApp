@@ -32,6 +32,23 @@
   justify-content: center;
 }
 
+.general-add-lines-message{
+  width:600px;
+  padding:10px 0px;
+  color: #FF5864;
+}
+
+.general-add-lines-message:hover{
+  width:600px;
+  padding:10px 0px;
+  color: black;
+}
+
+.no-lines{
+  margin:24px;
+  color: gray;
+}
+
 .card-stack{
   border-top: 1px solid black;
   padding-bottom:40px;
@@ -230,7 +247,7 @@ background-color: rgb(255, 255, 255);
   justify-content: center;
   margin: 30px;
   height: 40%;
-  width:80%;
+  width:100%;
 }
 
 .photo{
