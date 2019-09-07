@@ -43,8 +43,15 @@ def add_Line(name, punText):
     driver = '{ODBC Driver 17 for SQL Server}'
     connection = pyodbc.connect('DRIVER='+driver+'; PORT=1433; SERVER=' +
                                 server+'; DATABASE='+database+';UID='+username+';PWD=' + password)
-
     cursor = connection.cursor()
-    cursor.execute("""INSERT tinderappdatabase.dbo.PunsDB (name, score, punText) 
-                        VALUES (?, 10, ?)""", [name, punText])
-    connection.commit()
+    cursor.execute("""SELECT punText
+                    FROM tinderappdatabase.dbo.PunsDB
+                    WHERE name=? AND punText =?""", [name, punText])
+    # if line does NOT already exist in database for given name, add it
+    if not cursor.fetchone():
+        cursor = connection.cursor()
+        cursor.execute("""INSERT tinderappdatabase.dbo.PunsDB (name, score, punText) 
+                            VALUES (?, 10, ?)""", [name, punText])
+        connection.commit()
+    else:
+        logging.warn("Line not added")
