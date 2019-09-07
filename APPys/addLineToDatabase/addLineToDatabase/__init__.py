@@ -30,32 +30,31 @@ def tinderAppgetMatchLines(name):
                                 server+'; DATABASE='+database+';UID='+username+';PWD=' + password)
 
     cursor = connection.cursor()
-    cursor.execute("""SELECT punText 
-                    FROM tinderappdatabase.dbo.PunsDB 
+    cursor.execute("""SELECT punText
+                    FROM tinderappdatabase.dbo.PunsDB
                     WHERE name=?""", [name])
 
     # if name does NOT already exist in databse, get lines from reddit and add them to database
     if not cursor.fetchone():
-        lines = getLinesFromReddit(name)
-        add_lines(lines, name, cursor, connection)
+        lines = list()
+        if not hasBeenScraped(name, cursor, connection):
+            lines = getLinesFromReddit(name)
+            add_name(name, cursor, connection)
+            add_lines(lines, name, cursor, connection)
+        # check database again for name
+        cursor = connection.cursor()
+        cursor.execute("""SELECT punText
+                    FROM tinderappdatabase.dbo.PunsDB
+                    WHERE name=?""", [name])
+        if cursor.fetchone():
+            lines = getLinesFromDatabase(name, cursor, connection)
     else:
-        cursor.execute("""SELECT punText AS 'line'
-                        FROM tinderappdatabase.dbo.PunsDB
-                        WHERE name=? AND score >= 0
-                        ORDER BY score DESC
-                        FOR JSON PATH""", [name])
-
-        lines = set()
-        response = cursor.fetchone()[0]
-        logging.warn(response)
-        for i in json.loads(response):
-            lines.add(i['line'])
-
-    return list(lines)
+        lines = getLinesFromDatabase(name, cursor, connection)
+    return lines
 
 
 def add_lines(lines, name, cursor, connection):
-    for line in list(lines):
+    for line in lines:
         # https://github.com/mkleehammer/pyodbc/wiki/Getting-started#parameters
         cursor.execute("""INSERT tinderappdatabase.dbo.PunsDB (name, score, punText) 
                         VALUES (?, 10, ?)""", [name, line])
@@ -99,11 +98,45 @@ def getLinesFromReddit(name):
         names = findNearNames(name)
     except:
         names = [name]
-    lines = set()
+    lines = list()
     for name in names:
         someLines = returnRedditPUL(name)
         for line in someLines:
-            lines.add(line)
+            lines.append(line)
+    return lines
+
+
+def hasBeenScraped(name, cursor, connection):
+    cursor = connection.cursor()
+    cursor.execute("""SELECT name 
+                    FROM tinderappdatabase.dbo.scrapedNames 
+                    WHERE name=?""", [name])
+    if cursor.fetchone():
+        return True
+    else:
+        return False
+
+
+def add_name(name, cursor, connection):
+    cursor.execute("""INSERT tinderappdatabase.dbo.scrapedNames (name) 
+                        VALUES (?)""", [name])
+    connection.commit()
+
+
+def getLinesFromDatabase(name, cursor, connection):
+    cursor.execute("""SELECT punText AS 'line', score AS 'score'
+                        FROM tinderappdatabase.dbo.PunsDB
+                        WHERE name=? AND score >= 0
+                        ORDER BY score DESC
+                        FOR JSON PATH""", [name])
+    lines = list()
+    response = cursor.fetchone()[0]
+    logging.warn(response)
+    for i in json.loads(response):
+        line = i['line']
+        score = i['score']
+        lineObject = {'line': line, 'score': str(score)}
+        lines.append(lineObject)
     return lines
 
 
