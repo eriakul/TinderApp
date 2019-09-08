@@ -130,9 +130,14 @@ def getLinesFromDatabase(name, cursor, connection):
                         ORDER BY score DESC
                         FOR JSON PATH""", [name])
     lines = list()
-    response = cursor.fetchone()[0]
-    logging.warn(response)
-    for i in json.loads(response):
+    response = cursor.fetchall()
+    result = ""
+    # join all the lines fetched from database
+    for row in response:
+        result = result + row[0]
+    logging.warn(result)
+
+    for i in json.loads(result):
         line = i['line']
         score = i['score']
         lineObject = {'line': line, 'score': str(score)}
