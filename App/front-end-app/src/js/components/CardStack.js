@@ -93,7 +93,6 @@ export default class CardStack extends React.Component {
 
                     let line = lineObject["line"];
                     let score = lineObject["score"];
-
                     let reactionStatus = likesTracker[line];
                     let buttonClass;
                     let scoreModifier;
@@ -111,7 +110,7 @@ export default class CardStack extends React.Component {
                         scoreModifier = 0;
                     }
 
-                    score = score + scoreModifier - 10;
+                    score = parseInt(score) + scoreModifier - 10;
 
                     let prefix = score > 0 ? "+" : "";
                     let id;

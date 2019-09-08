@@ -6,9 +6,9 @@ import Button from 'react-bootstrap/Button'
 import CardStack from '../components/CardStack'
 import { connect } from 'react-redux';
 import { getPULForName, addLineToDB } from '../../actions/Actions'
-import { Link } from 'react-router-dom'
-import RequestStatus from '../../static/RequestStatus';
 import AddLineModalGeneral from '../components/AddLineModalGeneral'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 
 class GeneralPage extends React.Component {
@@ -57,6 +57,11 @@ class GeneralPage extends React.Component {
         if (!submittedName) {
             return null
         }
+        return (
+            <div className="general-add-lines-message" onClick={() => { this.setState({ showAddLineModal: true }) }}>
+                <FontAwesomeIcon style={{ color: "gray", marginRight:"12px" }} icon={faPlus} size="sm" /> 
+                Click here to add a pick up line for {submittedName}.</div>
+        )
     }
 
     renderAddLineModal({ showAddLineModal, submittedName }) {
@@ -102,7 +107,7 @@ class GeneralPage extends React.Component {
                         </Button>
                         </Form>
                     </div>
-                    <div className="general-add-lines-message" onClick={() => { this.setState({ showAddLineModal: true }) }}>Add a pick up line for {submittedName}.</div>
+                    {this.renderAddLineMessage({ submittedName })}
                     <CardStack name={submittedName} lines={matchLines}></CardStack>
                 </div >
             </div>

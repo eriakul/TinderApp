@@ -23,7 +23,6 @@ export default function stuff(state = initialState, action) {
         case FAILED_FETCH_MATCH_DATA:
             return {
                 ...state,
-                value: action.payload,
                 requestStatus: RequestStatus.FAILED
             }
         default:

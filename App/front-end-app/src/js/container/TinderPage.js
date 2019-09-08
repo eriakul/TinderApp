@@ -9,6 +9,7 @@ import RequestStatus from '../../static/RequestStatus';
 
 
 
+
 class TinderPage extends React.Component {
     constructor(props) {
         super(props);
@@ -41,8 +42,12 @@ class TinderPage extends React.Component {
         if (!token) {
             token = tinderToken.value;
         }
+        console.log(`nospace${token}`)
 
-        return (<AppPage token={token}></AppPage>)
+        return (<AppPage token={token} returnToLogin={() => {
+            this.props.history.push(`/tinder`);
+            localStorage.removeItem("tinderToken");
+        }}></AppPage>)
     }
 
     renderLoginPage = ({ tinderToken, token, smsMessage }) => {

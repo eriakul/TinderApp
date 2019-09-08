@@ -69,20 +69,22 @@ export function getMatchData(token) {
     return dispatch => {
         dispatch({ type: ActionTypes.FETCH_MATCH_DATA })
         ApiFunctions.fetchMatchData(token).then(response => {
-            return response.json()
+            try {
+                return response.json()
+            }
+            catch{
+                return false
+            }
         })
-            .then(
-                json => {
-                    try {
+            .then((json) => {
+                if (json) {
 
-                        dispatch({ type: ActionTypes.RECEIVED_MATCH_DATA, payload: json })
-
-                    }
-                    catch {
-                        dispatch({ type: ActionTypes.FAILED_FETCH_MATCH_DATA, payload: json })
-                    }
-
+                    dispatch({ type: ActionTypes.RECEIVED_MATCH_DATA, payload: json })
                 }
+                else {
+                    dispatch({ type: ActionTypes.FAILED_FETCH_MATCH_DATA, payload: json })
+                }
+            }
             )
     }
 }

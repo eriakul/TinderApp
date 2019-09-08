@@ -46,7 +46,8 @@ export default class LineSelect extends Component {
             <div className="add-line-container">
                 <div className="line-list-container" id="style-15">
                     <ListGroup>
-                        {matchLines.map(line => {
+                        {matchLines.map(lineObject => {
+                            let line = lineObject["line"]
                             return <ListGroup.Item action={true} eventKey={line} onClick={() => this.setState({ selectedLine: line, showSendLineButton: true })}>{line}</ListGroup.Item>
                         }
                         )}

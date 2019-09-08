@@ -56,11 +56,6 @@ class AppPage extends React.Component {
 
     }
 
-    startOver() {
-        localStorage.removeItem("tinderToken");
-        this.props.history.push(`/tinder`)
-    }
-
     renderAddLineModal({ showAddLineModal, selectedMatch }) {
         if (!showAddLineModal) {
             return null
@@ -73,8 +68,8 @@ class AppPage extends React.Component {
 
     }
 
-    renderMatchPreviews({ isPending, matchData }) {
-        if (isPending) {
+    renderMatchPreviews({ isFailed, isPending, matchData }) {
+        if (isPending || isFailed) {
             return null;
         }
         return (
@@ -82,14 +77,14 @@ class AppPage extends React.Component {
         )
     }
 
-    renderBody({ matchLines, selectedMatch, isPending, isFailed }) {
+    renderBody({ matchLines, selectedMatch, isPending, isFailed, returnToLogin }) {
         if (isFailed) {
             return (
                 <div style={{ height: "100vh", justifyContent: "center" }} className="column-container">
-                    <span>
-                        Failed to connect to Tinder. <div onClick={this.startOver}>Click here to try again.</div>
-                    </span>
-                </div>
+                    <div>
+                        Failed to connect to Tinder. <span className="redo" onClick={returnToLogin}>Click here to try again.</span>
+                    </div>
+                </div >
             )
         }
         if (isPending) {
@@ -132,7 +127,7 @@ class AppPage extends React.Component {
 
 
     render() {
-        const { matchData, matchLines } = this.props;
+        const { matchData, matchLines, returnToLogin } = this.props;
         const { selectedMatch, showAddLineModal } = this.state;
         const isPending = (matchData.requestStatus === RequestStatus.UNINITIALIZED || matchData.requestStatus === RequestStatus.PENDING);
         const isFailed = matchData.requestStatus === RequestStatus.FAILED;
@@ -141,11 +136,11 @@ class AppPage extends React.Component {
             <div><Header isGeneral={false}></Header>
                 <div className="app-container">
                     {this.renderAddLineModal({ showAddLineModal, selectedMatch })}
-                    {this.renderMatchPreviews({ isPending, matchData })}
+                    {this.renderMatchPreviews({ isPending, matchData, isFailed })}
 
                     <div className="page-container">
 
-                        {this.renderBody({ matchLines, selectedMatch, isPending, isFailed })}
+                        {this.renderBody({ matchLines, selectedMatch, isPending, isFailed, returnToLogin })}
                     </div>
                 </div></div>
         );
@@ -161,6 +156,7 @@ AppPage.propTypes = {
     matchLines: PropTypes.object.isRequired,
     refreshSendMessage: PropTypes.func.isRequired,
     addLineToDB: PropTypes.func.isRequired,
+    returnToLogin: PropTypes.func.isRequired,
 
 }
 
