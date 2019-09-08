@@ -54,11 +54,14 @@ def tinderAppgetMatchLines(name):
 
 
 def add_lines(lines, name, cursor, connection):
+    addedLines = list()
     for line in lines:
-        # https://github.com/mkleehammer/pyodbc/wiki/Getting-started#parameters
-        cursor.execute("""INSERT tinderappdatabase.dbo.PunsDB (name, score, punText) 
-                        VALUES (?, 10, ?)""", [name, line])
-        connection.commit()
+        if not line in addedLines:
+            # https://github.com/mkleehammer/pyodbc/wiki/Getting-started#parameters
+            cursor.execute("""INSERT tinderappdatabase.dbo.PunsDB (name, score, punText) 
+                            VALUES (?, 10, ?)""", [name, line])
+            connection.commit()
+            addedLines.append(line)
 
 
 def findNearNames(name):
