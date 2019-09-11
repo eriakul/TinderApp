@@ -20,14 +20,14 @@ export default class AddLineModal extends Component {
     }
 
     render() {
-        const { addLineToDatabase, sendMessageToTinder, onReject, selectedMatch } = this.props;
+        const { addLineToDatabase, onReject, name } = this.props;
         const { newLine } = this.state;
 
 
         return (
             <Modal show={true} onHide={onReject}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Add a new pick up line for "{selectedMatch}"</Modal.Title>
+                    <Modal.Title>Add a new pick up line for "{name}"</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <FormControl as="textarea" aria-label="selectedLine" value={newLine}
@@ -36,14 +36,7 @@ export default class AddLineModal extends Component {
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => { addLineToDatabase({ line: newLine }); onReject() }}>
                         Add Line
-              </Button>
-                    <Button id="send-btn" variant="primary" onClick={() => {
-                        addLineToDatabase({ line: newLine })
-                        sendMessageToTinder({ message: newLine })
-                        onReject()
-                    }}>
-                        Add and Send Line
-              </Button>
+                    </Button>
                 </Modal.Footer>
             </Modal >
         );
@@ -53,6 +46,5 @@ export default class AddLineModal extends Component {
 AddLineModal.propTypes = {
     onReject: PropTypes.func.isRequired,
     addLineToDatabase: PropTypes.func.isRequired,
-    sendMessageToTinder: PropTypes.func.isRequired,
-    selectedMatch: PropTypes.string,
+    name: PropTypes.string,
 }

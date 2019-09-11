@@ -4,12 +4,118 @@
   font-family: 'Montserrat', sans-serif !important;
 }
 
+
+.general-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-image: url('./static/images/fishnets-and-hearts.png');
+  background-repeat: repeat;
+  min-height: 100vh;
+}
+
+.general-page-container{
+  display:flex;
+  align-content: center;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 80%;
+  height:100%;
+}
+
+.general-name-input{
+  display:flex;
+  flex-direction: column;
+  height: 350px;
+  align-items:center;
+  align-content: center;
+  justify-content: center;
+}
+
+.general-add-lines-message{
+  width:600px;
+  padding:10px 0px;
+  color: gray;
+}
+
+.general-add-lines-message:hover{
+  width:600px;
+  padding:10px 0px;
+  color: black;
+}
+
+.no-lines{
+  margin:24px;
+  color: gray;
+}
+
+.card-stack{
+  border-top: 1px solid black;
+  padding-bottom:40px;
+}
+
+.card{
+  display:flex;
+  width: 600px !important;
+  margin-top: 12px;
+}
+
+.button-box{
+  text-align: right;
+}
+
+.reaction-button{
+  color:gray;
+margin-left:10px;
+}
+
+.reaction-button:hover{
+  color:black !important;
+}
+
+.clicked-reaction-button{
+  color: #FF5864;
+}
+
+#flag{
+  color: #f0f0f0;
+}
+
+#good{
+  color:rgb(130, 214, 130);
+}
+#bad{
+  color: rgb(190, 125, 125);
+}
+#neutral{
+  color:gray;
+}
+
+#like.liked{
+  color: #FF5864 ;
+}
+
+#dislike.disliked{
+  color: #FF5864 ;
+}
 .app-container{
   display: flex;
   justify-content: flex-start;
   flex-direction: row;
   /* align-items: center; */
   height: 100%;
+  background-image: url('./static/images/fishnets-and-hearts.png');
+  background-repeat: repeat;
+}
+
+.redo{
+  color:gray;
+
+}
+.redo:hover{
+  color:#FF5864;
+  
 }
 
 .side-panel-container{
@@ -20,7 +126,7 @@
   flex-direction: column;
   /* flex-wrap: nowrap; */
   /* align-items:center; */
-  background-color: rgb(240, 240, 240);
+  background-color: rgb(226, 226, 226);
   color: rgb(0, 0, 0);
   height: 100vh;
 
@@ -74,37 +180,56 @@
 
 .preview-photo-wrapper{
   align-items: center;
-  padding: 10px;
+  padding: 15px;
   flex-shrink: 1;
-  margin:10px;
+  margin:5px 10px;
   display: flex;
   flex-direction: row;
-
+  background-color: rgb(247, 247, 247);
+  border-radius: 3px;
+  box-shadow: 0px 2px 2px grey;
 }
 
 .preview-photo-wrapper:hover{
-background-color: #F5F5F5;
-border-radius: 3px;
+background-color: rgb(255, 255, 255);
 }
 
 .page-container{
   display:flex;
-  flex-shrink:1;
+  flex-grow:1;
   align-content: center;
   align-items: center;
   flex-direction: column;
   width: 80%;
 }
 
-.header{
-  background-color: rgb(219, 219, 219);
-  height: 60px;
-  width: 100%;
-  line-height: 60px;
-  text-align: center;
-  font-size: 40px;
-  color: white;
-  letter-spacing: 2px;
+
+.bg-dark {
+  background-image: linear-gradient(to right,rgb(17, 17, 17),rgb(29, 29, 29)) !important;
+}
+
+.navbar{
+  height: 50;
+}
+
+
+.link{
+  color:rgb(158, 158, 158);
+  margin: 12px;
+}
+
+.link:hover{
+  color:white
+}
+
+.card-stack{
+  border-top: 1px solid black;
+  padding-top: 20px;
+}
+
+.card{
+  display:flex;
+  width: 600px !important;
 }
 
 .column-container{
@@ -123,7 +248,7 @@ border-radius: 3px;
   justify-content: center;
   margin: 30px;
   height: 40%;
-  width:80%;
+  width:100%;
 }
 
 .photo{
@@ -172,13 +297,13 @@ border-radius: 3px;
 }
 
 .line-list-container{
-  max-height:330px;
+  height:270px;
   flex-shrink: 1;
   overflow:hidden;
   overflow-y: scroll;
-}
-.line-list-container:hover{
-  
+  border-top: 1px solid gray;
+  border-bottom: 1px solid gray;
+  background-color:white;
 }
 
 .send-line-button-container {

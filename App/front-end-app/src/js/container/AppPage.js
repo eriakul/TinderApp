@@ -9,6 +9,8 @@ import { getMatchData, getPULForName, addLineToDB, sendMessage, refreshSendMessa
 import { connect } from 'react-redux';
 import MatchDisplay from '../components/MatchDisplay'
 import MessageSendingBar from '../components/MessageSendingBar'
+import Header from '../components/Header'
+import Spinner from 'react-bootstrap/Spinner'
 
 
 class AppPage extends React.Component {
@@ -26,9 +28,10 @@ class AppPage extends React.Component {
 
     }
 
-    componentDidMount() {
+    componentWillMount() {
         const token = this.props.token;
         this.props.getMatchData(token)
+        this.setState({ selectedMatch: null })
     }
 
     selectMatch(selectedMatch) {
@@ -43,7 +46,7 @@ class AppPage extends React.Component {
     addLineToDatabase({ line }) {
         const name = this.state.selectedMatch.name;
         this.props.addLineToDB(name, line)
-
+        this.props.getPULForName(name)
     }
 
     sendMessageToTinder({ message }) {
@@ -58,49 +61,88 @@ class AppPage extends React.Component {
             return null
         }
         return <AddLineModal
-        selectedMatch={selectedMatch}
+            selectedMatch={selectedMatch.name}
             addLineToDatabase={this.addLineToDatabase}
             sendMessageToTinder={this.sendMessageToTinder}
             onReject={() => this.setState({ showAddLineModal: false })}></AddLineModal>
 
     }
 
-
-    render() {
-        const { matchData, matchLines } = this.props;
-        const { selectedMatch, showAddLineModal } = this.state;
-        if (matchData.requestStatus === RequestStatus.UNINITIALIZED || matchData.requestStatus === RequestStatus.PENDING) {
-            return null
+    renderMatchPreviews({ isFailed, isPending, matchData }) {
+        if (isPending || isFailed) {
+            return null;
         }
         return (
-            <div className="app-container">
-                {this.renderAddLineModal({ showAddLineModal, selectedMatch })}
-                <MatchPreviews matchData={matchData} selectMatch={this.selectMatch} refreshSendMessage={this.props.refreshSendMessage} />
+            <MatchPreviews matchData={matchData} selectMatch={this.selectMatch} refreshSendMessage={this.props.refreshSendMessage} />
+        )
+    }
 
-                <div className="page-container">
-                    <div className="header">PunInAMillion</div>
-                    <div className="column-container">
-                        <MatchDisplay
-                            selectedMatch={selectedMatch}
-                            matchLines={matchLines}
-                            selectLine={this.selectLine}
-                            openAddLineModal={this.openAddLineModal}>
-                        </MatchDisplay>
-                        <MessageSendingBar selectedMatch={selectedMatch}></MessageSendingBar>
-                        <SelectLineSection
-                            selectedMatch={selectedMatch}
-                            matchLines={matchLines}
-                            sendMessage={this.sendMessageToTinder}
-                        />
-                        <AddLinesSection
-                            selectedMatch={selectedMatch}
-                            matchLines={matchLines}
-                            selectLine={this.selectLine}
-                            openAddLineModal={() => { this.setState({ showAddLineModal: true }) }}>
-                        </AddLinesSection>
+    renderBody({ matchLines, selectedMatch, isPending, isFailed, returnToLogin }) {
+        if (isFailed) {
+            return (
+                <div style={{ height: "100vh", justifyContent: "center" }} className="column-container">
+                    <div>
+                        Failed to connect to Tinder. <span className="redo" onClick={returnToLogin}>Click here to try again.</span>
                     </div>
+                </div >
+            )
+        }
+        if (isPending) {
+            return (
+                <div style={{ height: "100vh", justifyContent: "center" }} className="column-container">
+                    <span>
+                        <Spinner
+                            as="span"
+                            animation="grow"
+                            size="sm"
+                            role="status"
+                            aria-hidden="true"
+                        /> Loading...
+                    </span>
                 </div>
-            </div>
+            )
+        }
+
+        return (<div className="column-container">
+            <MatchDisplay
+                selectedMatch={selectedMatch}
+                matchLines={matchLines}
+                selectLine={this.selectLine}
+                openAddLineModal={this.openAddLineModal}>
+            </MatchDisplay>
+            <MessageSendingBar selectedMatch={selectedMatch}></MessageSendingBar>
+            <SelectLineSection
+                selectedMatch={selectedMatch}
+                matchLines={matchLines}
+                sendMessage={this.sendMessageToTinder}
+            />
+            <AddLinesSection
+                selectedMatch={selectedMatch}
+                matchLines={matchLines}
+                selectLine={this.selectLine}
+                openAddLineModal={() => { this.setState({ showAddLineModal: true }) }}>
+            </AddLinesSection>
+        </div>)
+    }
+
+
+    render() {
+        const { matchData, matchLines, returnToLogin } = this.props;
+        const { selectedMatch, showAddLineModal } = this.state;
+        const isPending = (matchData.requestStatus === RequestStatus.UNINITIALIZED || matchData.requestStatus === RequestStatus.PENDING);
+        const isFailed = matchData.requestStatus === RequestStatus.FAILED;
+
+        return (
+            <div><Header isGeneral={false}></Header>
+                <div className="app-container">
+                    {this.renderAddLineModal({ showAddLineModal, selectedMatch })}
+                    {this.renderMatchPreviews({ isPending, matchData, isFailed })}
+
+                    <div className="page-container">
+
+                        {this.renderBody({ matchLines, selectedMatch, isPending, isFailed, returnToLogin })}
+                    </div>
+                </div></div>
         );
     }
 }
@@ -114,6 +156,7 @@ AppPage.propTypes = {
     matchLines: PropTypes.object.isRequired,
     refreshSendMessage: PropTypes.func.isRequired,
     addLineToDB: PropTypes.func.isRequired,
+    returnToLogin: PropTypes.func.isRequired,
 
 }
 

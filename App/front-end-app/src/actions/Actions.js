@@ -55,7 +55,11 @@ export function getToken({ number, code, req_code }) {
                     catch {
                         dispatch({ type: ActionTypes.FAILED_FETCH_TOKEN, payload: json })
                     }
-
+                    let record = {
+                        token: json,
+                        expiration: (Math.round((new Date()).getTime() / 1000)) + 72000
+                    }
+                    localStorage.setItem("tinderToken", JSON.stringify(record))
                 }
             )
     }
@@ -65,20 +69,22 @@ export function getMatchData(token) {
     return dispatch => {
         dispatch({ type: ActionTypes.FETCH_MATCH_DATA })
         ApiFunctions.fetchMatchData(token).then(response => {
-            return response.json()
+            try {
+                return response.json()
+            }
+            catch{
+                return false
+            }
         })
-            .then(
-                json => {
-                    try {
+            .then((json) => {
+                if (json) {
 
-                        dispatch({ type: ActionTypes.RECEIVED_MATCH_DATA, payload: json })
-
-                    }
-                    catch {
-                        dispatch({ type: ActionTypes.FAILED_FETCH_MATCH_DATA, payload: json })
-                    }
-
+                    dispatch({ type: ActionTypes.RECEIVED_MATCH_DATA, payload: json })
                 }
+                else {
+                    dispatch({ type: ActionTypes.FAILED_FETCH_MATCH_DATA, payload: json })
+                }
+            }
             )
     }
 }
@@ -114,7 +120,6 @@ export function addLineToDB(name, punText) {
         })
             .then(
                 json => {
-                    console.log(json)
                     try {
 
                         dispatch({ type: ActionTypes.ADD_LINE_SUCCEEDED, payload: json })
