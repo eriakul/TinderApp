@@ -4,43 +4,50 @@
   font-family: 'Montserrat', sans-serif !important;
 }
 
+html, body {min-height: 100% ;}
+body {background-size: cover;}
 
 .general-container{
   display: flex;
   flex-direction: column;
-  align-items: center;
   background-image: url('./static/images/fishnets-and-hearts.png');
   background-repeat: repeat;
   min-height: 100vh;
+  width: 100%;
+  justify-content: right;
 }
 
 .general-page-container{
   display:flex;
-  align-content: center;
-  align-items: center;
   flex-direction: column;
-  justify-content: flex-start;
-  width: 80%;
+  width: 50%;
   height:100%;
+  align-self:center;
+
+}
+@media screen and (max-width: 750px) {
+  .general-page-container{
+    width:100% !important;
+  }
 }
 
 .general-name-input{
   display:flex;
   flex-direction: column;
-  height: 350px;
+  margin-top:100px;
+  height: 300px;
   align-items:center;
   align-content: center;
   justify-content: center;
 }
 
 .general-add-lines-message{
-  width:600px;
+  margin: 0px 12px;
   padding:10px 0px;
   color: gray;
 }
 
 .general-add-lines-message:hover{
-  width:600px;
   padding:10px 0px;
   color: black;
 }
@@ -53,11 +60,11 @@
 .card-stack{
   border-top: 1px solid black;
   padding-bottom:40px;
+  margin:12px;
 }
 
 .card{
   display:flex;
-  width: 600px !important;
   margin-top: 12px;
 }
 
@@ -225,11 +232,6 @@ background-color: rgb(255, 255, 255);
 .card-stack{
   border-top: 1px solid black;
   padding-top: 20px;
-}
-
-.card{
-  display:flex;
-  width: 600px !important;
 }
 
 .column-container{
