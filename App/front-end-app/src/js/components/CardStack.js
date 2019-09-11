@@ -22,14 +22,14 @@ export default class CardStack extends React.Component {
 
         let lT = JSON.parse(localStorage.getItem("likesTracker"));
         if (lT === null || typeof lT !== "object") {
-            lT = { name: {} }
+            lT ={}
+            lT[name]={}
         }
         else {
             if (!lT[name]) {
                 lT[name] = {}
             }
         }
-
         if (!lT[name][line]) {
             if (type === "liked") {
                 changeLineScore({ name, punText: line, score_delta: 1 })

@@ -28,7 +28,6 @@ export function fetchAuthToken(number, code, req_code) {
 export function fetchMatchData(token) {
     const url = `https://tinderapp.azurewebsites.net/api/getMatchData`;
     const data = { "token": token };
-    console.log("Logging in with token: ", token)
     return fetch(url, {
         method: 'POST',
         body: JSON.stringify(data),

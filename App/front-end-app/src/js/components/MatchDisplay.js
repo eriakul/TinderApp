@@ -1,12 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import LineSelect from './LineSelect'
-import Button from 'react-bootstrap/Button'
-import Card from 'react-bootstrap/Card'
 import '../../TinderApp.css'
-import RequestStatus from '../../static/RequestStatus';
-import Spinner from 'react-bootstrap/Spinner';
-import CardGroup from 'react-bootstrap/CardGroup'
+
 
 export default class MatchDisplay extends Component {
 

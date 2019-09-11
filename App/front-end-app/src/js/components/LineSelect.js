@@ -31,7 +31,6 @@ export default class LineSelect extends Component {
     render() {
         const { sendMessage, matchLines, selectedMatch } = this.props;
         const { showSendLineButton, selectedLine } = this.state;
-        console.log(selectedMatch)
         if (!matchLines || !selectedMatch) {
             return null
         }

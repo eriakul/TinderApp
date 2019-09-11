@@ -23,7 +23,7 @@ export default function matchLines(state = initialState, action) {
         case FAILED_FETCH_MATCH_LINES:
             return {
                 ...state,
-                value: action.payload,
+                value: [],
                 requestStatus: RequestStatus.FAILED
             }
         default:

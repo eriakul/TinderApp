@@ -46,7 +46,7 @@ class MessageSendingBar extends Component {
 
 MessageSendingBar.propTypes = {
     sendMessageStatus: PropTypes.object.isRequired,
-    selectedMatch: PropTypes.object.isRequired,
+    selectedMatch: PropTypes.object,
 }
 
 export default connect(

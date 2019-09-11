@@ -42,7 +42,6 @@ class TinderPage extends React.Component {
         if (!token) {
             token = tinderToken.value;
         }
-        console.log(`nospace${token}`)
 
         return (<AppPage token={token} returnToLogin={() => {
             this.props.history.push(`/tinder`);

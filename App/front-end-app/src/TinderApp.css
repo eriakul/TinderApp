@@ -4,6 +4,7 @@
   font-family: 'Montserrat', sans-serif !important;
 }
 
+
 .general-container{
   display: flex;
   flex-direction: column;
@@ -202,33 +203,24 @@ background-color: rgb(255, 255, 255);
   width: 80%;
 }
 
-.header{
-  background-image: linear-gradient(to right,rgb(17, 17, 17),rgb(0, 0, 0));
-  opacity: 0.9;
-  height: 80px;
-  width: 100%;
-  line-height: 80px;
-  text-align: center;
-  font-size: 40px;
-  color: white;
-  letter-spacing: 2px;
+
+.bg-dark {
+  background-image: linear-gradient(to right,rgb(17, 17, 17),rgb(29, 29, 29)) !important;
 }
 
-.header .float-right{
-  position: absolute;
-  right: 50px;
-  align-items: center;
-  font-size: 12px !important;
-  color: white;
-}
-.header .float-right-home{
-  position: absolute;
-  right: 200px;
-  align-items: center;
-  font-size: 12px !important;
-  color: white;
+.navbar{
+  height: 50;
 }
 
+
+.link{
+  color:rgb(158, 158, 158);
+  margin: 12px;
+}
+
+.link:hover{
+  color:white
+}
 
 .card-stack{
   border-top: 1px solid black;
