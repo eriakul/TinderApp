@@ -53,6 +53,7 @@ body {background-size: cover;}
 }
 
 .no-lines{
+  text-align:center;
   margin:24px;
   color: gray;
 }
