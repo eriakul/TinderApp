@@ -22,8 +22,8 @@ export default class CardStack extends React.Component {
 
         let lT = JSON.parse(localStorage.getItem("likesTracker"));
         if (lT === null || typeof lT !== "object") {
-            lT ={}
-            lT[name]={}
+            lT = {}
+            lT[name] = {}
         }
         else {
             if (!lT[name]) {
@@ -56,15 +56,17 @@ export default class CardStack extends React.Component {
 
         if (lines.requestStatus === RequestStatus.PENDING) {
             return (
-                <span>
-                    <Spinner
-                        as="span"
-                        animation="grow"
-                        size="sm"
-                        role="status"
-                        aria-hidden="true"
-                    /> Loading...
-                </span>)
+                <div style={{ textAlign: "center", color: "gray" }}>
+                    <span >
+                        <Spinner
+                            as="span"
+                            animation="grow"
+                            size="sm"
+                            role="status"
+                            aria-hidden="true"
+                        /> Loading...
+                    </span>
+                </div>)
         }
 
         if (lines.requestStatus !== RequestStatus.SUCCEEDED) {
