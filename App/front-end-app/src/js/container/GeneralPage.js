@@ -86,12 +86,10 @@ class GeneralPage extends React.Component {
                     {this.renderAddLineModal({ showAddLineModal, submittedName })}
                     <div className="general-name-input">
                         <Form controlId="token" onSubmit={this.onSubmit}>
-                            <Form.Group controlId="code" >
+                            <Form.Group  >
                                 <Form.Label>Enter a name below</Form.Label>
                                 <Form.Control
                                     placeholder="jennifer"
-                                    style={{ width: "600px" }}
-                                    size="lg"
                                     type="text"
                                     autoFocus
                                     value={name}
