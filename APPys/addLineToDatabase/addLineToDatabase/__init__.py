@@ -86,7 +86,7 @@ def returnRedditPUL(name):
     for submission in reddit.subreddit('pickuplines').search(name):
         submission.comments.replace_more(limit=0)
         for topLevelComment in submission.comments:
-            if topLevelComment.score>3:
+            if topLevelComment.score > 3:
                 pickuplines.append(topLevelComment.body)
 
     if pickuplines:
@@ -107,6 +107,8 @@ def getLinesFromReddit(name):
         someLines = returnRedditPUL(name)
         for line in someLines:
             lines.append(line)
+    if len(lines) > 24:
+        lines = lines[:24]
     return lines
 
 
